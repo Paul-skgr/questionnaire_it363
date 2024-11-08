@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -43,6 +44,15 @@ class _QuizScreenState extends State<QuizScreen> {
     final data = json.decode(response);
     setState(() {
       questions = data['questions'];
+
+      // Mélanger les questions dans un ordre aléatoire
+      questions.shuffle(Random());
+
+      // Mélanger également les options de chaque question
+      for (var question in questions) {
+        question['options'].shuffle(Random());
+      }
+
       selectedOptions = List<String>.filled(questions.length, '');
     });
   }
@@ -53,7 +63,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
     setState(() {
       answerColor = isCorrect ? Colors.green : Colors.red;
-      selectedOptions[questionIndex] = option;
+      selectedOptions[questionIndex] = option; // Mettre à jour la réponse sélectionnée
       if (isCorrect) {
         correctAnswers++; // Augmenter le score pour une bonne réponse
       }
@@ -105,6 +115,7 @@ class _QuizScreenState extends State<QuizScreen> {
           : PageView.builder(
               controller: _pageController,
               itemCount: questions.length,
+              physics: NeverScrollableScrollPhysics(), // Désactiver le défilement manuel
               itemBuilder: (context, index) {
                 final question = questions[index];
                 return Padding(
