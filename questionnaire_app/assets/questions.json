@@ -1,0 +1,12 @@
+{
+    "questions": [
+      {
+        "id": 1,
+        "category": "Histoire",
+        "difficulty": "Facile",
+        "question": "Qui a été le premier président des États-Unis ?",
+        "options": ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "John Adams"],
+        "correct_answer": "George Washington"
+      }
+    ]
+  }
