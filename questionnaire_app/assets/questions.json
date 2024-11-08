@@ -7,6 +7,33 @@
         "question": "Qui a été le premier président des États-Unis ?",
         "options": ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "John Adams"],
         "correct_answer": "George Washington"
+      },
+    
+      {
+        "id": 2,
+        "category": "Sport",
+        "difficulty": "Facile",
+        "question": "Qui est l'homme le plus rapide de l'histoire ?",
+        "options": ["Usain Bolt", "Justin Gatlin", "christophe Lemaitre", "jack Sparrow"],
+        "correct_answer": "Usain Bolt"
+      },
+    
+      {
+        "id": 3,
+        "category": "Sciences",
+        "difficulty": "Moyen",
+        "question": "Qui a déclaré le premier que la terre était ronde ?",
+        "options": ["Platon", "Socrates", "Psy", "Galilée"],
+        "correct_answer": "Galilée"
+      },
+
+      {
+        "id": 4,
+        "category": "Loisirs",
+        "difficulty": "Difficile",
+        "question": "Qui est l'auteur du livre 'le vieille homme et la mer' ?",
+        "options": ["Emile Zola", "Ionesco", "Emingway", "Stephen King"],
+        "correct_answer": "Emingway"
       }
     ]
   }
