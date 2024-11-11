@@ -5,23 +5,25 @@ void main() {
   runApp(MyApp());
 }
 
-MaterialColor whiteMaterialColor = MaterialColor(
+MaterialColor whiteMaterialColor = const MaterialColor(
   0xFFFFFFFF,
   <int, Color>{
-    50: Color(0xFFFFFFFF), // Teinte très claire
-    100: Color(0xFFFFFFFF), // Teinte claire
-    200: Color(0xFFFFFFFF), // Teinte moyenne claire
-    300: Color(0xFFFFFFFF), // Teinte moyenne
-    400: Color(0xFFFFFFFF), // Teinte plus foncée
-    500: Color(0xFFFFFFFF), // Couleur de base (blanc)
-    600: Color(0xFFFFFFFF), // Teinte plus foncée
-    700: Color(0xFFFFFFFF), // Teinte encore plus foncée
-    800: Color(0xFFFFFFFF), // Teinte encore plus foncée
-    900: Color(0xFFFFFFFF), // Teinte la plus foncée
+    50: const Color(0xFFFFFFFF), // Teinte très claire
+    100: const Color(0xFFFFFFFF), // Teinte claire
+    200: const Color(0xFFFFFFFF), // Teinte moyenne claire
+    300: const Color(0xFFFFFFFF), // Teinte moyenne
+    400: const Color(0xFFFFFFFF), // Teinte plus foncée
+    500: const Color(0xFFFFFFFF), // Couleur de base (blanc)
+    600: const Color(0xFFFFFFFF), // Teinte plus foncée
+    700: const Color(0xFFFFFFFF), // Teinte encore plus foncée
+    800: const Color(0xFFFFFFFF), // Teinte encore plus foncée
+    900: const Color(0xFFFFFFFF), // Teinte la plus foncée
   },
 );
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,6 +37,8 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -65,18 +69,18 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Page d\'accueil'),
+        title: const Text('Page d\'accueil'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Sélectionner les catégories du quiz',
               style: TextStyle(fontSize: 24),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               children: categories.keys.map((category) {
                 return CheckboxListTile(
@@ -90,10 +94,10 @@ class _HomePageState extends State<HomePage> {
                 );
               }).toList(),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _startQuiz,
-              child: Text('Commencer le quiz'),
+              child: const Text('Commencer le quiz'),
             ),
           ],
         ),
