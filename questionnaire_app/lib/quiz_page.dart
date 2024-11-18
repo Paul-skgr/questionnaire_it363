@@ -89,7 +89,7 @@ class _QuizPageState extends State<QuizPage> {
           }).toList(),
         );
       case "images":
-        return Column(
+        return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: options.map((option) {
             final isCorrectAnswer = option == currentQuestion['correct_answer'];
@@ -107,12 +107,16 @@ class _QuizPageState extends State<QuizPage> {
                     : Colors.blue;
 
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: backgroundColor,
                   disabledBackgroundColor: backgroundColor,
-                  minimumSize: const Size(100, 50),
+                  minimumSize: const Size(100, 100), // Make the button square
+                  maximumSize: const Size(150, 150),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 onPressed: _selectedAnswer.isEmpty
                     ? () {
@@ -124,8 +128,8 @@ class _QuizPageState extends State<QuizPage> {
                   children: [
                     Image.asset(
                       '../assets/images/${currentQuestion["images"][options.indexOf(option)]}',
-                      width: 100,
-                      height: 100,
+                      width: 80,
+                      height: 80,
                     ),
                     Text(option, style: const TextStyle(fontSize: 18)),
                   ],
