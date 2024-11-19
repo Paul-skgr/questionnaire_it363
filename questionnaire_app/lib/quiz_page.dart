@@ -49,6 +49,100 @@ class _QuizPageState extends State<QuizPage> {
     _loadQuestions(); // Charger les questions au démarrage
   }
 
+  Widget _printQuestionAnswers(
+      Map<String, dynamic> currentQuestion, List<String> options) {
+    // Afficher les réponses sous forme de boutons
+    switch (currentQuestion["type"]) {
+      case "single-choice":
+        return Column(
+          children: options.map((option) {
+            final isCorrectAnswer = option == currentQuestion['correct_answer'];
+            final isSelectedCorrect =
+                _selectedAnswer == 'correct' && isCorrectAnswer;
+            final isSelectedIncorrect =
+                _selectedAnswer == 'incorrect' && isCorrectAnswer;
+            final isIncorrectOption =
+                _selectedAnswer == 'incorrect' && !isCorrectAnswer;
+
+            Color backgroundColor = isSelectedCorrect || isSelectedIncorrect
+                ? Colors.green
+                : isIncorrectOption
+                    ? Colors.red
+                    : Colors.blue;
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: backgroundColor,
+                  disabledBackgroundColor: backgroundColor,
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                onPressed: _selectedAnswer.isEmpty
+                    ? () {
+                        _checkAnswer(option, currentQuestion['correct_answer']);
+                      }
+                    : null,
+                child: Text(option, style: const TextStyle(fontSize: 18)),
+              ),
+            );
+          }).toList(),
+        );
+      case "images":
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: options.map((option) {
+            final isCorrectAnswer = option == currentQuestion['correct_answer'];
+            final isSelectedCorrect =
+                _selectedAnswer == 'correct' && isCorrectAnswer;
+            final isSelectedIncorrect =
+                _selectedAnswer == 'incorrect' && isCorrectAnswer;
+            final isIncorrectOption =
+                _selectedAnswer == 'incorrect' && !isCorrectAnswer;
+
+            Color backgroundColor = isSelectedCorrect || isSelectedIncorrect
+                ? Colors.green
+                : isIncorrectOption
+                    ? Colors.red
+                    : Colors.blue;
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: backgroundColor,
+                  disabledBackgroundColor: backgroundColor,
+                  minimumSize: const Size(100, 100), // Make the button square
+                  maximumSize: const Size(150, 150),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: _selectedAnswer.isEmpty
+                    ? () {
+                        _checkAnswer(option, currentQuestion['correct_answer']);
+                      }
+                    : null,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      '../assets/images/${currentQuestion["images"][options.indexOf(option)]}',
+                      width: 80,
+                      height: 80,
+                    ),
+                    Text(option, style: const TextStyle(fontSize: 18)),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        );
+      default:
+        throw Exception("Type de question inconnu");
+    }
+  }
+
   void _nextQuestion() {
     setState(() {
       if (_currentQuestionIndex < quizQuestions.length - 1) {
@@ -119,42 +213,8 @@ class _QuizPageState extends State<QuizPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
-            // Afficher les réponses sous forme de boutons
-            Column(
-              children: options.map((option) {
-                final isCorrectAnswer =
-                    option == currentQuestion['correct_answer'];
-                final isSelectedCorrect =
-                    _selectedAnswer == 'correct' && isCorrectAnswer;
-                final isSelectedIncorrect =
-                    _selectedAnswer == 'incorrect' && isCorrectAnswer;
-                final isIncorrectOption =
-                    _selectedAnswer == 'incorrect' && !isCorrectAnswer;
-
-                Color backgroundColor = isSelectedCorrect || isSelectedIncorrect
-                    ? Colors.green
-                    : isIncorrectOption
-                        ? Colors.red
-                        : Colors.blue;
-
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: backgroundColor,
-                      disabledBackgroundColor: backgroundColor,
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    onPressed: _selectedAnswer.isEmpty
-                        ? () {
-                            _checkAnswer(
-                                option, currentQuestion['correct_answer']);
-                          }
-                        : null,
-                    child: Text(option, style: const TextStyle(fontSize: 18)),
-                  ),
-                );
-              }).toList(),
+            Expanded(
+              child: _printQuestionAnswers(currentQuestion, options),
             ),
             const SizedBox(height: 30),
             ElevatedButton(

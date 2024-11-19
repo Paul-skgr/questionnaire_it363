@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'quiz_page.dart'; // Import de la page Quiz
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 MaterialColor whiteMaterialColor = const MaterialColor(
   0xFFFFFFFF,
   <int, Color>{
-    50: const Color(0xFFFFFFFF), // Teinte très claire
-    100: const Color(0xFFFFFFFF), // Teinte claire
-    200: const Color(0xFFFFFFFF), // Teinte moyenne claire
-    300: const Color(0xFFFFFFFF), // Teinte moyenne
-    400: const Color(0xFFFFFFFF), // Teinte plus foncée
-    500: const Color(0xFFFFFFFF), // Couleur de base (blanc)
-    600: const Color(0xFFFFFFFF), // Teinte plus foncée
-    700: const Color(0xFFFFFFFF), // Teinte encore plus foncée
-    800: const Color(0xFFFFFFFF), // Teinte encore plus foncée
-    900: const Color(0xFFFFFFFF), // Teinte la plus foncée
+    50: Color(0xFFFFFFFF), // Teinte très claire
+    100: Color(0xFFFFFFFF), // Teinte claire
+    200: Color(0xFFFFFFFF), // Teinte moyenne claire
+    300: Color(0xFFFFFFFF), // Teinte moyenne
+    400: Color(0xFFFFFFFF), // Teinte plus foncée
+    500: Color(0xFFFFFFFF), // Couleur de base (blanc)
+    600: Color(0xFFFFFFFF), // Teinte plus foncée
+    700: Color(0xFFFFFFFF), // Teinte encore plus foncée
+    800: Color(0xFFFFFFFF), // Teinte encore plus foncée
+    900: Color(0xFFFFFFFF), // Teinte la plus foncée
   },
 );
 
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: whiteMaterialColor,
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
