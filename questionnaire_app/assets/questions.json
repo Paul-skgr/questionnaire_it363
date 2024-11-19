@@ -306,10 +306,10 @@
         "Daruma Otoshi Kun"
       ],
       "images": [
-        "Booster.png",
-        "Scrupulous_Fingore.png",
-        "Swanky_Kong.png",
-        "Daruma_Otoshi_Kun.png"
+        "assets/images/Booster.png",
+        "assets/images/Scrupulous_Fingore.png",
+        "assets/images/Swanky_Kong.png",
+        "assets/images/Daruma_Otoshi_Kun.png"
       ],
       "category": "Loisirs",
       "type": "images"

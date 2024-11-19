@@ -127,7 +127,7 @@ class _QuizPageState extends State<QuizPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      '../assets/images/${currentQuestion["images"][options.indexOf(option)]}',
+                      '${currentQuestion["images"][options.indexOf(option)]}',
                       width: 80,
                       height: 80,
                     ),
