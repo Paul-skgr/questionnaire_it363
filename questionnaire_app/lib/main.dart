@@ -50,6 +50,12 @@ class _HomePageState extends State<HomePage> {
     'Sciences': false,
     'Loisirs': false,
   };
+  Map<String, Color> categoryColors = {
+    'Histoire': Colors.blue,
+    'Sport': Colors.orange,
+    'Sciences': Colors.green,
+    'Loisirs': const Color.fromARGB(255, 235, 13, 13),
+  };
 
   void _startQuiz() {
     List<String> selectedCategories = categories.entries
@@ -84,7 +90,12 @@ class _HomePageState extends State<HomePage> {
             Column(
               children: categories.keys.map((category) {
                 return CheckboxListTile(
-                  title: Text(category),
+                  title: Text(
+                    category,
+                    style: TextStyle(
+                      color: categoryColors[category], // Appliquer la couleur
+                    ),
+                  ),
                   value: categories[category],
                   onChanged: (bool? value) {
                     setState(() {
