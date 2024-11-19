@@ -99,6 +99,20 @@
       ],
       "category": "Histoire",
       "type": "single-choice"
+    },
+    {
+      "question": "Quand la Seconde Guerre mondiale a-t-elle pris fin ?",
+      "correct_answer": "1945",
+      "options": ["1900", "2000"],
+      "type": "timeline",
+      "category": "Histoire"
+    },
+    {
+      "question": "En quelle année la Révolution française a-t-elle commencé ?",
+      "correct_answer": "1789",
+      "options": ["1700", "1800"],
+      "type": "timeline",
+      "category": "Histoire"
     }
   ],
 
@@ -114,6 +128,13 @@
       ],
       "category": "Sport",
       "type": "single-choice"
+    },
+    {
+      "question": "En quelle année à été inventé le football moderne ?",
+      "correct_answer": "1855",
+      "options": ["1800", "1900"],
+      "type": "timeline",
+      "category": "Histoire"
     },
     {
       "question": "Quel joueur de football a remporté le plus grand nombre de Ballons d'Or ?",
@@ -178,13 +199,6 @@
       "type": "single-choice"
     },
     {
-      "question": "Quel sport est joué sur un court avec un filet et une raquette ?",
-      "correct_answer": "Le tennis",
-      "options": ["Le tennis", "Le badminton", "Le volleyball", "Le ping-pong"],
-      "category": "Sport",
-      "type": "single-choice"
-    },
-    {
       "question": "Qui est le plus grand boxeur de tous les temps ?",
       "correct_answer": "Muhammad Ali",
       "options": [
@@ -219,6 +233,13 @@
       "options": ["H2O", "O2H", "H2O2", "HO2"],
       "category": "Sciences",
       "type": "single-choice"
+    },
+    {
+      "question": "A quel siècle Isaac Newton est née ?",
+      "correct_answer": "17",
+      "options": ["15", "20"],
+      "type": "timeline",
+      "category": "Histoire"
     },
     {
       "question": "Qui a découvert la pénicilline ?",
