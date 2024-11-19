@@ -1,255 +1,318 @@
 {
-    "Histoire": [
-      {
-        "question": "Qui a été le premier président des États-Unis ?",
-        "correct_answer": "George Washington",
-        "options": ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "John Adams"],
-        "category" : "Histoire"
-      },
-      {
-        "question": "En quelle année a eu lieu la Révolution française ?",
-        "correct_answer": "1789",
-        "options": ["1789", "1792", "1804", "1776"],
-        "category" : "Histoire"
-      },
-      {
-        "question": "Qui a écrit la Déclaration d'Indépendance des États-Unis ?",
-        "correct_answer": "Thomas Jefferson",
-        "options": ["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"],
-        "category" : "Histoire"
-      },
-      {
-        "question": "En quelle année l'Empire romain s'est-il effondré ?",
-        "correct_answer": "476",
-        "options": ["476", "410", "324", "800"],
-        "category" : "Histoire"
-      },
-      {
-        "question": "Qui a été le dernier empereur romain d'Occident ?",
-        "correct_answer": "Romulus Augustulus",
-        "options": ["Romulus Augustulus", "Jules César", "Augustus", "Néron"],
-        "category" : "Histoire"
-      },
-      {
-        "question": "Quel événement a déclenché la Première Guerre mondiale ?",
-        "correct_answer": "L'assassinat de l'archiduc François-Ferdinand",
-        "options": ["L'assassinat de l'archiduc François-Ferdinand", "La bataille de Verdun", "Le traité de Versailles", "L'attaque de Pearl Harbor"],
-        "category" : "Histoire"
-      },
-      {
-        "question": "Qui a été le leader du mouvement de la désobéissance civile en Inde ?",
-        "correct_answer": "Mahatma Gandhi",
-        "options": ["Mahatma Gandhi", "Nehru", "Indira Gandhi", "Jawaharlal Nehru"],
-        "category" : "Histoire"
-      },
-      {
-        "question": "En quelle année l'homme a-t-il marché sur la Lune pour la première fois ?",
-        "correct_answer": "1969",
-        "options": ["1969", "1959", "1979", "1989"],
-        "category" : "Histoire"
-      },
-      {
-        "question": "Quel roi français a abdiqué en 1814 ?",
-        "correct_answer": "Napoléon Bonaparte",
-        "options": ["Napoléon Bonaparte", "Louis XVI", "Louis XIV", "Charles de Gaulle"],
-        "category" : "Histoire"
-      },
-      {
-        "question": "Quel événement historique est survenu le 6 juin 1944 ?",
-        "correct_answer": "Le débarquement en Normandie",
-        "options": ["Le débarquement en Normandie", "La chute de Berlin", "La bataille de Stalingrad", "La signature de l'armistice"],
-        "category" : "Histoire"
-      }
-    ],
-    
-    "Sport": [
-      {
-        "question": "Qui est l'homme le plus rapide de l'histoire ?",
-        "correct_answer": "Usain Bolt",
-        "options": ["Usain Bolt", "Justin Gatlin", "Christophe Lemaitre", "Jack Sparrow"],
-        "category" : "Sport"
-      },
-      {
-        "question": "Quel joueur de football a remporté le plus grand nombre de Ballons d'Or ?",
-        "correct_answer": "Lionel Messi",
-        "options": ["Cristiano Ronaldo", "Lionel Messi", "Michel Platini", "Johan Cruyff"],
-        "category" : "Sport"
-      },
-      {
-        "question": "Qui détient le record du monde du 100 mètres ?",
-        "correct_answer": "Usain Bolt",
-        "options": ["Usain Bolt", "Carl Lewis", "Michael Johnson", "Justin Gatlin"],
-        "category" : "Sport"
-      },
-      {
-        "question": "Quel pays a remporté la Coupe du Monde de football en 2018 ?",
-        "correct_answer": "France",
-        "options": ["France", "Brésil", "Allemagne", "Argentine"],
-        "category" : "Sport"
-      },
-      {
-        "question": "Quel joueur de tennis a remporté le plus de titres du Grand Chelem en simple ?",
-        "correct_answer": "Roger Federer",
-        "options": ["Roger Federer", "Rafael Nadal", "Novak Djokovic", "Pete Sampras"],
-        "category" : "Sport"
-      },
-      {
-        "question": "Quel sport est pratiqué lors des Jeux Olympiques d'hiver ?",
-        "correct_answer": "Le ski alpin",
-        "options": ["Le ski alpin", "Le football", "Le basket-ball", "Le rugby"],
-        "category" : "Sport"
-      },
-      {
-        "question": "Qui est l'entraîneur de l'équipe de football de Manchester United en 2020 ?",
-        "correct_answer": "Ole Gunnar Solskjær",
-        "options": ["Ole Gunnar Solskjær", "José Mourinho", "Sir Alex Ferguson", "David Moyes"],
-        "category" : "Sport"
-      },
-      {
-        "question": "Quel sport est joué sur un court avec un filet et une raquette ?",
-        "correct_answer": "Le tennis",
-        "options": ["Le tennis", "Le badminton", "Le volleyball", "Le ping-pong"],
-        "category" : "Sport"
-      },
-      {
-        "question": "Qui est le plus grand boxeur de tous les temps ?",
-        "correct_answer": "Muhammad Ali",
-        "options": ["Muhammad Ali", "Mike Tyson", "Joe Frazier", "Rocky Marciano"],
-        "category" : "Sport"
-      },
-      {
-        "question": "Quel pays a organisé les Jeux Olympiques d'été en 2008 ?",
-        "correct_answer": "Chine",
-        "options": ["Chine", "France", "Grèce", "Royaume-Uni"],
-        "category" : "Sport"
-      }
-    ],
-    
-    "Sciences": [
-      {
-        "question": "Qui a formulé la théorie de la relativité ?",
-        "correct_answer": "Albert Einstein",
-        "options": ["Isaac Newton", "Albert Einstein", "Galilée", "Nikola Tesla"],
-        "category" : "Sciences"
-      },
-      {
-        "question": "Quelle est la formule chimique de l'eau ?",
-        "correct_answer": "H2O",
-        "options": ["H2O", "O2H", "H2O2", "HO2"],
-        "category" : "Sciences"
-      },
-      {
-        "question": "Qui a découvert la pénicilline ?",
-        "correct_answer": "Alexander Fleming",
-        "options": ["Marie Curie", "Louis Pasteur", "Alexander Fleming", "Isaac Newton"],
-        "category" : "Sciences"
-      },
-      {
-        "question": "Quel est l'élément chimique de symbole 'O' ?",
-        "correct_answer": "Oxygène",
-        "options": ["Oxygène", "Ozone", "Osmium", "Or"],
-        "category" : "Sciences"
-      },
-      {
-        "question": "Quel est le plus grand organe du corps humain ?",
-        "correct_answer": "La peau",
-        "options": ["Le cerveau", "La peau", "Le cœur", "Le foie"],
-        "category" : "Sciences"
-      },
-      {
-        "question": "En quelle année l'homme a-t-il envoyé un premier satellite dans l'espace ?",
-        "correct_answer": "1957",
-        "options": ["1957", "1961", "1969", "1945"],
-        "category" : "Sciences"
-      },
-      {
-        "question": "Qui est le père de la géométrie ?",
-        "correct_answer": "Euclide",
-        "options": ["Pythagore", "Euclide", "Archimède", "Thalès"],
-        "category" : "Sciences"
-      },
-      {
-        "question": "Quel est l'élément chimique avec le numéro atomique 79 ?",
-        "correct_answer": "L'or",
-        "options": ["L'or", "L'argent", "Le cuivre", "Le fer"],
-        "category" : "Sciences"
-      },
-      {
-        "question": "Quelle est la planète la plus proche du Soleil ?",
-        "correct_answer": "Mercure",
-        "options": ["Mercure", "Vénus", "Terre", "Mars"],
-        "category" : "Sciences"
-      },
-      {
-        "question": "Qui a inventé l'ampoule électrique ?",
-        "correct_answer": "Thomas Edison",
-        "options": ["Nikola Tesla", "Alexander Graham Bell", "Thomas Edison", "Benjamin Franklin"],
-        "category" : "Sciences"
-      }
-    ],
-    
-    "Loisirs": [
-      {
-        "question": "Quel est le nom du personnage principal du jeu vidéo 'The Legend of Zelda' ?",
-        "correct_answer": "Link",
-        "options": ["Link", "Zelda", "Ganon", "Samus"],
-        "category" : "Loisirs"
-      },
-      {
-        "question": "Dans quel film peut-on entendre la phrase 'Que la Force soit avec toi' ?",
-        "correct_answer": "Star Wars",
-        "options": ["Star Wars", "Indiana Jones", "Avengers", "Matrix"],
-        "category" : "Loisirs"
-      },
-      {
-        "question": "Quel est le nom du célèbre détective créé par Sir Arthur Conan Doyle ?",
-        "correct_answer": "Sherlock Holmes",
-        "options": ["Sherlock Holmes", "Hercule Poirot", "Miss Marple", "Sam Spade"],
-        "category" : "Loisirs"
-      },
-      {
-        "question": "Quel est le nom du protagoniste dans le jeu vidéo 'Super Mario' ?",
-        "correct_answer": "Mario",
-        "options": ["Mario", "Luigi", "Bowser", "Peach"],
-        "category" : "Loisirs"
-      },
-      {
-        "question": "Quel film d'animation a été réalisé par Pixar et se déroule dans l'espace ?",
-        "correct_answer": "Wall-E",
-        "options": ["Wall-E", "Toy Story", "Monstres et Cie", "Cars"],
-        "category" : "Loisirs"
-      },
-      {
-        "question": "Quel est le nom du créateur de la série de livres 'Harry Potter' ?",
-        "correct_answer": "J.K. Rowling",
-        "options": ["J.K. Rowling", "J.R.R. Tolkien", "C.S. Lewis", "George R.R. Martin"],
-        "category" : "Loisirs"
-      },
-      {
-        "question": "Quel est le nom de l'île où se déroule l'histoire de 'Les Dents de la mer' ?",
-        "correct_answer": "Amity Island",
-        "options": ["Amity Island", "Alcatraz", "Skull Island", "Coney Island"],
-        "category" : "Loisirs"
-      },
-      {
-        "question": "Qui a écrit 'Roméo et Juliette' ?",
-        "correct_answer": "William Shakespeare",
-        "options": ["William Shakespeare", "Charles Dickens", "Jane Austen", "Homer"],
-        "category" : "Loisirs"
-      },
-      {
-        "question": "Dans quel jeu vidéo trouve-t-on les personnages 'Pikachu' et 'Bulbizarre' ?",
-        "correct_answer": "Pokémon",
-        "options": ["Pokémon", "Digimon", "Yu-Gi-Oh!", "Dragon Ball"],
-        "category" : "Loisirs"
-      },
-      {
-        "question": "Qui est le réalisateur du film 'Inception' ?",
-        "correct_answer": "Christopher Nolan",
-        "options": ["Christopher Nolan", "Steven Spielberg", "Martin Scorsese", "Ridley Scott"],
-        "category" : "Loisirs"
-      }
-    ]
-  }
-  
-  
+  "Histoire": [
+    {
+      "question": "Qui a été le premier président des États-Unis ?",
+      "correct_answer": "George Washington",
+      "options": [
+        "George Washington",
+        "Thomas Jefferson",
+        "Abraham Lincoln",
+        "John Adams"
+      ],
+      "category": "Histoire",
+      "type": "single-choice"
+    },
+    {
+      "question": "En quelle année a eu lieu la Révolution française ?",
+      "correct_answer": "1789",
+      "options": ["1789", "1792", "1804", "1776"],
+      "category": "Histoire",
+      "type": "single-choice"
+    },
+    {
+      "question": "Qui a écrit la Déclaration d'Indépendance des États-Unis ?",
+      "correct_answer": "Thomas Jefferson",
+      "options": [
+        "Thomas Jefferson",
+        "Abraham Lincoln",
+        "George Washington",
+        "John Adams"
+      ],
+      "category": "Histoire",
+      "type": "single-choice"
+    },
+    {
+      "question": "En quelle année l'Empire romain s'est-il effondré ?",
+      "correct_answer": "476",
+      "options": ["476", "410", "324", "800"],
+      "category": "Histoire",
+      "type": "single-choice"
+    },
+    {
+      "question": "Qui a été le dernier empereur romain d'Occident ?",
+      "correct_answer": "Romulus Augustulus",
+      "options": ["Romulus Augustulus", "Jules César", "Augustus", "Néron"],
+      "category": "Histoire",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel événement a déclenché la Première Guerre mondiale ?",
+      "correct_answer": "L'assassinat de l'archiduc François-Ferdinand",
+      "options": [
+        "L'assassinat de l'archiduc François-Ferdinand",
+        "La bataille de Verdun",
+        "Le traité de Versailles",
+        "L'attaque de Pearl Harbor"
+      ],
+      "category": "Histoire",
+      "type": "single-choice"
+    },
+    {
+      "question": "Qui a été le leader du mouvement de la désobéissance civile en Inde ?",
+      "correct_answer": "Mahatma Gandhi",
+      "options": [
+        "Mahatma Gandhi",
+        "Nehru",
+        "Indira Gandhi",
+        "Jawaharlal Nehru"
+      ],
+      "category": "Histoire",
+      "type": "single-choice"
+    },
+    {
+      "question": "En quelle année l'homme a-t-il marché sur la Lune pour la première fois ?",
+      "correct_answer": "1969",
+      "options": ["1969", "1959", "1979", "1989"],
+      "category": "Histoire",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel roi français a abdiqué en 1814 ?",
+      "correct_answer": "Napoléon Bonaparte",
+      "options": [
+        "Napoléon Bonaparte",
+        "Louis XVI",
+        "Louis XIV",
+        "Charles de Gaulle"
+      ],
+      "category": "Histoire",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel événement historique est survenu le 6 juin 1944 ?",
+      "correct_answer": "Le débarquement en Normandie",
+      "options": [
+        "Le débarquement en Normandie",
+        "La chute de Berlin",
+        "La bataille de Stalingrad",
+        "La signature de l'armistice"
+      ],
+      "category": "Histoire",
+      "type": "single-choice"
+    }
+  ],
+
+  "Sport": [
+    {
+      "question": "Qui est l'homme le plus rapide de l'histoire ?",
+      "correct_answer": "Usain Bolt",
+      "options": [
+        "Usain Bolt",
+        "Justin Gatlin",
+        "Christophe Lemaitre",
+        "Jack Sparrow"
+      ],
+      "category": "Sport",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel joueur de football a remporté le plus grand nombre de Ballons d'Or ?",
+      "correct_answer": "Lionel Messi",
+      "options": [
+        "Cristiano Ronaldo",
+        "Lionel Messi",
+        "Michel Platini",
+        "Johan Cruyff"
+      ],
+      "category": "Sport",
+      "type": "single-choice"
+    },
+    {
+      "question": "Qui détient le record du monde du 100 mètres ?",
+      "correct_answer": "Usain Bolt",
+      "options": [
+        "Usain Bolt",
+        "Carl Lewis",
+        "Michael Johnson",
+        "Justin Gatlin"
+      ],
+      "category": "Sport",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel pays a remporté la Coupe du Monde de football en 2018 ?",
+      "correct_answer": "France",
+      "options": ["France", "Brésil", "Allemagne", "Argentine"],
+      "category": "Sport",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel joueur de tennis a remporté le plus de titres du Grand Chelem en simple ?",
+      "correct_answer": "Roger Federer",
+      "options": [
+        "Roger Federer",
+        "Rafael Nadal",
+        "Novak Djokovic",
+        "Pete Sampras"
+      ],
+      "category": "Sport",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel sport est pratiqué lors des Jeux Olympiques d'hiver ?",
+      "correct_answer": "Le ski alpin",
+      "options": ["Le ski alpin", "Le football", "Le basket-ball", "Le rugby"],
+      "category": "Sport",
+      "type": "single-choice"
+    },
+    {
+      "question": "Qui est l'entraîneur de l'équipe de football de Manchester United en 2020 ?",
+      "correct_answer": "Ole Gunnar Solskjær",
+      "options": [
+        "Ole Gunnar Solskjær",
+        "José Mourinho",
+        "Sir Alex Ferguson",
+        "David Moyes"
+      ],
+      "category": "Sport",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel sport est joué sur un court avec un filet et une raquette ?",
+      "correct_answer": "Le tennis",
+      "options": ["Le tennis", "Le badminton", "Le volleyball", "Le ping-pong"],
+      "category": "Sport",
+      "type": "single-choice"
+    },
+    {
+      "question": "Qui est le plus grand boxeur de tous les temps ?",
+      "correct_answer": "Muhammad Ali",
+      "options": [
+        "Muhammad Ali",
+        "Mike Tyson",
+        "Joe Frazier",
+        "Rocky Marciano"
+      ],
+      "category": "Sport",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel pays a organisé les Jeux Olympiques d'été en 2008 ?",
+      "correct_answer": "Chine",
+      "options": ["Chine", "France", "Grèce", "Royaume-Uni"],
+      "category": "Sport",
+      "type": "single-choice"
+    }
+  ],
+
+  "Sciences": [
+    {
+      "question": "Qui a formulé la théorie de la relativité ?",
+      "correct_answer": "Albert Einstein",
+      "options": ["Isaac Newton", "Albert Einstein", "Galilée", "Nikola Tesla"],
+      "category": "Sciences",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quelle est la formule chimique de l'eau ?",
+      "correct_answer": "H2O",
+      "options": ["H2O", "O2H", "H2O2", "HO2"],
+      "category": "Sciences",
+      "type": "single-choice"
+    },
+    {
+      "question": "Qui a découvert la pénicilline ?",
+      "correct_answer": "Alexander Fleming",
+      "options": [
+        "Marie Curie",
+        "Louis Pasteur",
+        "Alexander Fleming",
+        "Isaac Newton"
+      ],
+      "category": "Sciences",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel est l'élément chimique de symbole 'O' ?",
+      "correct_answer": "Oxygène",
+      "options": ["Oxygène", "Ozone", "Osmium", "Or"],
+      "category": "Sciences",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel est le plus grand organe du corps humain ?",
+      "correct_answer": "La peau",
+      "options": ["Le cerveau", "La peau", "Le cœur", "Le foie"],
+      "category": "Sciences",
+      "type": "single-choice"
+    },
+    {
+      "question": "En quelle année l'homme a-t-il envoyé un premier satellite dans l'espace ?",
+      "correct_answer": "1957",
+      "options": ["1957", "1961", "1969", "1945"],
+      "category": "Sciences",
+      "type": "single-choice"
+    },
+    {
+      "question": "Qui est le père de la géométrie ?",
+      "correct_answer": "Euclide",
+      "options": ["Pythagore", "Euclide", "Archimède", "Thalès"],
+      "category": "Sciences",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quel est l'élément chimique avec le numéro atomique 79 ?",
+      "correct_answer": "L'or",
+      "options": ["L'or", "L'argent", "Le cuivre", "Le fer"],
+      "category": "Sciences",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quelle est la planète la plus proche du Soleil ?",
+      "correct_answer": "Mercure",
+      "options": ["Mercure", "Vénus", "Terre", "Mars"],
+      "category": "Sciences",
+      "type": "single-choice"
+    },
+    {
+      "question": "Qui a inventé l'ampoule électrique ?",
+      "correct_answer": "Thomas Edison",
+      "options": [
+        "Nikola Tesla",
+        "Alexander Graham Bell",
+        "Thomas Edison",
+        "Benjamin Franklin"
+      ],
+      "category": "Sciences",
+      "type": "single-choice"
+    }
+  ],
+
+  "Loisirs": [
+    {
+      "question": "Quel est le nom du personnage principal du jeu vidéo 'The Legend of Zelda' ?",
+      "correct_answer": "Link",
+      "options": ["Link", "Zelda", "Ganon", "Samus"],
+      "category": "Loisirs",
+      "type": "single-choice"
+    },
+    {
+      "question": "Quelle personnage ne fais PAS partie d'un univers de Mario?",
+      "correct_answer": "Scrupulous Fingore",
+      "options": [
+        "Booster",
+        "Scrupulous Fingore",
+        "Swanky Kong",
+        "Daruma Otoshi Kun"
+      ],
+      "images": [
+        "Booster.png",
+        "Scrupulous_Fingore.png",
+        "Swanky_Kong.png",
+        "Daruma_Otoshi_Kun.png"
+      ],
+      "category": "Loisirs",
+      "type": "images"
+    }
+  ]
+}

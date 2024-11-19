@@ -4,7 +4,6 @@ class ResultPage extends StatelessWidget {
   final int correctAnswersCount;
   final int totalQuestions;
 
-  // Constructeur pour recevoir les paramètres
   const ResultPage(
       {super.key,
       required this.correctAnswersCount,
@@ -39,7 +38,7 @@ class ResultPage extends StatelessWidget {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context); // Retour à la page d'accueil
+                Navigator.pop(context);
               },
               child: const Text('Recommencer le Quiz'),
             ),

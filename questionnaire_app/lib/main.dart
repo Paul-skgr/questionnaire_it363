@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       initialData: null,
       catchError: (_, __) => null,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: SplashScreenWrapper(),
         theme: ThemeData(
           primarySwatch: Colors.blue,
