@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'resultScreen.dart';
@@ -49,7 +50,7 @@ class _QuizPageState extends State<QuizPage> {
     _loadQuestions(); // Charger les questions au démarrage
   }
 
-  Future<void> _showFeedbackAnimation(bool isCorrect, String correctAnswer) async {
+Future<void> _showFeedbackAnimation(bool isCorrect, String correctAnswer) async {
   final Color color = isCorrect ? Colors.green : Colors.red;
   final IconData icon = isCorrect ? Icons.check_circle : Icons.cancel;
   final String message = isCorrect 
@@ -58,42 +59,71 @@ class _QuizPageState extends State<QuizPage> {
 
   await showDialog(
     context: context,
-    barrierDismissible: true, 
+    barrierDismissible: false, // Ne permet pas de fermer la boîte de dialogue en dehors
     builder: (BuildContext context) {
-      return Center(
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-          width: 250,
-          height: 250,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(20),
+      return Stack(
+        children: [
+          // Couverture floue de l'arrière-plan
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0), // Appliquer un flou
+              child: Container(
+                color: Colors.grey.withOpacity(0.7), // Fond semi-transparent
+              ),
+            ),
           ),
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 80, color: Colors.white),
-              const SizedBox(height: 20),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.none,
-                ),
-              )
-            ],
+          // Animation au premier plan
+          Center(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+              width: 250,
+              height: 300, // Augmenter la hauteur pour ajouter un bouton
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, size: 80, color: Colors.white),
+                  const SizedBox(height: 20),
+                  Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Fermer la boîte de dialogue
+                      _nextQuestion(); // Passer à la question suivante
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    child: const Text(
+                      'Suivant',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       );
     },
   );
-  _nextQuestion();
 }
+
+
 
 
 
