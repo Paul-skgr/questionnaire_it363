@@ -89,54 +89,59 @@ class _QuizPageState extends State<QuizPage> {
           }).toList(),
         );
       case "images":
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: options.map((option) {
-            final isCorrectAnswer = option == currentQuestion['correct_answer'];
-            final isSelectedCorrect =
-                _selectedAnswer == 'correct' && isCorrectAnswer;
-            final isSelectedIncorrect =
-                _selectedAnswer == 'incorrect' && isCorrectAnswer;
-            final isIncorrectOption =
-                _selectedAnswer == 'incorrect' && !isCorrectAnswer;
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: options.map((option) {
+              final isCorrectAnswer =
+                  option == currentQuestion['correct_answer'];
+              final isSelectedCorrect =
+                  _selectedAnswer == 'correct' && isCorrectAnswer;
+              final isSelectedIncorrect =
+                  _selectedAnswer == 'incorrect' && isCorrectAnswer;
+              final isIncorrectOption =
+                  _selectedAnswer == 'incorrect' && !isCorrectAnswer;
 
-            Color backgroundColor = isSelectedCorrect || isSelectedIncorrect
-                ? Colors.green
-                : isIncorrectOption
-                    ? Colors.red
-                    : Colors.blue;
+              Color backgroundColor = isSelectedCorrect || isSelectedIncorrect
+                  ? Colors.green
+                  : isIncorrectOption
+                      ? Colors.red
+                      : Colors.blue;
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: backgroundColor,
-                  disabledBackgroundColor: backgroundColor,
-                  minimumSize: const Size(100, 100), // Make the button square
-                  maximumSize: const Size(150, 150),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: backgroundColor,
+                    disabledBackgroundColor: backgroundColor,
+                    minimumSize: const Size(100, 100), // Make the button square
+                    maximumSize: const Size(150, 150),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: _selectedAnswer.isEmpty
+                      ? () {
+                          _checkAnswer(
+                              option, currentQuestion['correct_answer']);
+                        }
+                      : null,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        '${currentQuestion["images"][options.indexOf(option)]}',
+                        width: 80,
+                        height: 80,
+                      ),
+                      Text(option, style: const TextStyle(fontSize: 18)),
+                    ],
                   ),
                 ),
-                onPressed: _selectedAnswer.isEmpty
-                    ? () {
-                        _checkAnswer(option, currentQuestion['correct_answer']);
-                      }
-                    : null,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      '${currentQuestion["images"][options.indexOf(option)]}',
-                      width: 80,
-                      height: 80,
-                    ),
-                    Text(option, style: const TextStyle(fontSize: 18)),
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ),
         );
       default:
         throw Exception("Type de question inconnu");
@@ -214,7 +219,16 @@ class _QuizPageState extends State<QuizPage> {
             ),
             const SizedBox(height: 30),
             Expanded(
-              child: _printQuestionAnswers(currentQuestion, options),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: _printQuestionAnswers(currentQuestion, options),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 30),
             ElevatedButton(
