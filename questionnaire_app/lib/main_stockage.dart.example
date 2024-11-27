@@ -1,4 +1,30 @@
-{
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:questionnaire_app/firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'JSON Firestore',
+      home: JsonToFirestorePage(),
+    );
+  }
+}
+
+class JsonToFirestorePage extends StatelessWidget {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  // Votre JSON
+  final Map<String, dynamic> jsonData = {
   "Histoire": [
     {
       "question": "Qui a été le premier président des États-Unis ?",
@@ -315,4 +341,37 @@
       "type": "images"
     }
   ]
+};
+
+  // Fonction pour stocker le JSON dans Firestore
+  Future<void> saveJsonToFirestore() async {
+    try {
+      // Itération sur chaque catégorie (clé du JSON)
+      jsonData.forEach((category, questions) async {
+        for (var question in questions) {
+          // Ajout de chaque question comme document dans une collection portant le nom de la catégorie
+          await firestore.collection(category).add(question);
+        }
+      });
+
+      print("Le JSON a été enregistré avec succès dans Firestore !");
+    } catch (e) {
+      print("Erreur lors de l'enregistrement : $e");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Enregistrer JSON dans Firestore"),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: saveJsonToFirestore,
+          child: Text("Stocker le JSON"),
+        ),
+      ),
+    );
+  }
 }

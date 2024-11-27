@@ -1,57 +1,61 @@
-import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'resultScreen.dart';
 
 class QuizPage extends StatefulWidget {
   final List<String> selectedCategories;
 
-  const QuizPage({super.key, required this.selectedCategories});
+  const QuizPage({
+    Key? key,
+    required this.selectedCategories,
+  }) : super(key: key);
 
   @override
   _QuizPageState createState() => _QuizPageState();
 }
 
 class _QuizPageState extends State<QuizPage> {
-  late Map<String, List<Map<String, dynamic>>> questions;
-  late List<Map<String, dynamic>> quizQuestions;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> quizQuestions = [];
   int _currentQuestionIndex = 0;
   String _selectedAnswer = '';
-  int _correctAnswersCount = 0; // Variable pour compter les bonnes réponses
-
-  // Fonction pour charger les questions depuis le fichier JSON
-  Future<void> _loadQuestions() async {
-    final String response =
-        await rootBundle.loadString('assets/questions.json');
-    final Map<String, dynamic> data = json.decode(response);
-
-    setState(() {
-      questions = data.map((key, value) {
-        return MapEntry(
-            key, List<Map<String, dynamic>>.from(value.map((item) => item)));
-      });
-
-      // Filtrer les questions par catégorie sélectionnée
-      quizQuestions = [];
-      for (String category in widget.selectedCategories) {
-        quizQuestions.addAll(questions[category] ?? []);
-      }
-
-      // Mélanger les questions de manière aléatoire
-      quizQuestions.shuffle(Random());
-    });
-  }
+  int _correctAnswersCount = 0;
+  bool _isLoading = true; // Indique si les données sont en cours de chargement
 
   @override
   void initState() {
     super.initState();
-    _loadQuestions(); // Charger les questions au démarrage
+    _loadQuestionsFromFirestore();
+  }
+
+  /// Charger les questions depuis Firestore pour les catégories sélectionnées
+  Future<void> _loadQuestionsFromFirestore() async {
+    try {
+      List<Map<String, dynamic>> loadedQuestions = [];
+
+      for (String category in widget.selectedCategories) {
+        QuerySnapshot snapshot =
+            await _firestore.collection(category).get(); // Récupère les docs
+        for (var doc in snapshot.docs) {
+          loadedQuestions.add(doc.data() as Map<String, dynamic>);
+        }
+      }
+
+      // Mélanger les questions pour varier leur ordre
+      loadedQuestions.shuffle(Random());
+
+      setState(() {
+        quizQuestions = loadedQuestions;
+        _isLoading = false; // Les données sont prêtes
+      });
+    } catch (e) {
+      print("Erreur lors du chargement des questions : $e");
+    }
   }
 
   Widget _printQuestionAnswers(
       Map<String, dynamic> currentQuestion, List<String> options) {
-    // Afficher les réponses sous forme de boutons
     switch (currentQuestion["type"]) {
       case "single-choice":
         return Column(
@@ -112,7 +116,7 @@ class _QuizPageState extends State<QuizPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: backgroundColor,
                   disabledBackgroundColor: backgroundColor,
-                  minimumSize: const Size(100, 100), // Make the button square
+                  minimumSize: const Size(100, 100),
                   maximumSize: const Size(150, 150),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -149,7 +153,6 @@ class _QuizPageState extends State<QuizPage> {
         _currentQuestionIndex++;
         _selectedAnswer = ''; // Réinitialiser la sélection de la réponse
       } else {
-        // Afficher la page de résultats avec le score final
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -164,7 +167,7 @@ class _QuizPageState extends State<QuizPage> {
   void _checkAnswer(String selectedOption, String correctAnswer) {
     setState(() {
       if (selectedOption == correctAnswer) {
-        _correctAnswersCount++; // Incrémenter le nombre de bonnes réponses
+        _correctAnswersCount++;
       }
       _selectedAnswer =
           selectedOption == correctAnswer ? 'correct' : 'incorrect';
@@ -173,16 +176,28 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Quiz')),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     if (quizQuestions.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text('Quiz')),
         body: const Center(
-            child:
-                CircularProgressIndicator()), // Afficher un chargement si les questions ne sont pas encore chargées
+          child: Text(
+            'Aucune question disponible pour les catégories sélectionnées.',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+        ),
       );
     }
 
-    // Récupérer la question courante
     Map<String, dynamic> currentQuestion = quizQuestions[_currentQuestionIndex];
     List<String> options = List<String>.from(currentQuestion['options']);
 
@@ -196,7 +211,6 @@ class _QuizPageState extends State<QuizPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            // Afficher la catégorie de la question
             Text(
               'Catégorie: ${currentQuestion['category']}',
               style: const TextStyle(
@@ -206,7 +220,6 @@ class _QuizPageState extends State<QuizPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            // Afficher la question
             Text(
               currentQuestion['question'],
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
