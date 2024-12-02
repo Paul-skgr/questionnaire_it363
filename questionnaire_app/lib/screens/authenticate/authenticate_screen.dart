@@ -3,19 +3,6 @@ import 'package:questionnaire_app/common/constants.dart';
 import 'package:questionnaire_app/common/loading.dart';
 import 'package:questionnaire_app/services/authentication.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: AuthenticateScreen(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-    );
-  }
-}
 
 class AuthenticateScreen extends StatefulWidget {
   @override
@@ -49,6 +36,41 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     });
   }
 
+  Future<void> _handleRegister(String email, String password) async {
+    setState(() => loading = true);
+
+    dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+
+    if (!mounted) return;
+
+    if (result == "Email verification sent") {
+      setState(() => loading = false);
+      Navigator.of(context).pushReplacementNamed('/verify');
+    } else if (result == null) {
+      setState(() {
+        loading = false;
+        error = 'Failed to register. Please try again.';
+      });
+    }
+  }
+
+  Future<void> _handleSignIn(String email, String password) async {
+    setState(() => loading = true);
+
+    var result = await _auth.signInWithEmailAndPassword(email, password);
+
+    if (!mounted) return;
+
+    if (result == null) {
+      setState(() {
+        loading = false;
+        error = 'Invalid email or password.';
+      });
+    } else {
+      setState(() => loading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return loading
@@ -59,8 +81,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
               backgroundColor: Colors.blueGrey,
               elevation: 0.0,
               title: Text(showSignIn
-                  ? 'Sign in to the quizz plateform'
-                  : 'Register to quizz plateform'),
+                  ? 'Sign in to the quiz platform'
+                  : 'Register to quiz platform'),
               actions: <Widget>[
                 TextButton.icon(
                   icon: Icon(
@@ -108,18 +130,13 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState?.validate() ?? false) {
-                          setState(() => loading = true);
-                          var password = passwordController.text;
-                          var email = emailController.text;
+                          var email = emailController.text.trim();
+                          var password = passwordController.text.trim();
 
-                          dynamic result = showSignIn 
-                          ? await _auth.signInWithEmailAndPassword(email, password)
-                          : await _auth.registerWithEmailAndPassword(email, password);
-                          if (result == null) {
-                            setState(() {
-                              loading = false;
-                              error = 'Please supply a valid email';
-                            });
+                          if (showSignIn) {
+                            await _handleSignIn(email, password);
+                          } else {
+                            await _handleRegister(email, password);
                           }
                         }
                       },

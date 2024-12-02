@@ -21,18 +21,29 @@ class AuthenticationService{
     }
   }
   Future registerWithEmailAndPassword(String email, String password) async {
-    try{
+    try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
+          email: email, password: password);
       User? user = result.user;
 
-      // TODO store new user in firestrore
-      return _userFromFirebaseUser(user);
-    } catch(exception){
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
+        return "Email verification sent";
+      }
+
+      return user;
+    } catch (exception) {
       print(exception.toString());
       return null;
     }
   }
+
+  Future<bool> isEmailVerified() async {
+    User? user = _auth.currentUser;
+    await user?.reload();
+    return user?.emailVerified ?? false;
+  }
+
   Future signOut() async {
     try{
       return await _auth.signOut();
