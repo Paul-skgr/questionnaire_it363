@@ -16,9 +16,14 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   late Map<String, List<Map<String, dynamic>>> questions;
   late List<Map<String, dynamic>> quizQuestions;
+  late List<Map<String, dynamic>> higherDifficultyQuestions;
+  late Map<String, dynamic> storedQuestion;
   int _currentQuestionIndex = 0;
+  int _difficulty = 0;
   String _selectedAnswer = '';
   int _correctAnswersCount = 0; // Variable pour compter les bonnes réponses
+  bool _isDiffChecked = false;
+  bool _isAlreadyExecuted = false;
 
   // Fonction pour charger les questions depuis le fichier JSON
   Future<void> _loadQuestions() async {
@@ -34,8 +39,14 @@ class _QuizPageState extends State<QuizPage> {
 
       // Filtrer les questions par catégorie sélectionnée
       quizQuestions = [];
+      higherDifficultyQuestions = [];
       for (String category in widget.selectedCategories) {
-        quizQuestions.addAll(questions[category] ?? []);
+        quizQuestions.addAll(questions[category]
+                ?.where((question) => question["difficulty"] == 0) ??
+            []);
+        higherDifficultyQuestions.addAll(questions[category]
+                ?.where((question) => question["difficulty"] >= 1) ??
+            []);
       }
 
       // Mélanger les questions de manière aléatoire
@@ -153,6 +164,7 @@ class _QuizPageState extends State<QuizPage> {
       if (_currentQuestionIndex < quizQuestions.length - 1) {
         _currentQuestionIndex++;
         _selectedAnswer = ''; // Réinitialiser la sélection de la réponse
+        _isDiffChecked = false;
       } else {
         // Afficher la page de résultats avec le score final
         Navigator.pushReplacement(
@@ -170,10 +182,44 @@ class _QuizPageState extends State<QuizPage> {
     setState(() {
       if (selectedOption == correctAnswer) {
         _correctAnswersCount++; // Incrémenter le nombre de bonnes réponses
+        _difficulty++;
+        _difficulty++;
+        debugPrint('Difficulty: $_difficulty');
       }
       _selectedAnswer =
           selectedOption == correctAnswer ? 'correct' : 'incorrect';
     });
+  }
+
+  Map<String, dynamic> _getCurrentQuestion() {
+    Map<String, dynamic> currentQuestion;
+
+    // Checking for higher difficulty questions...
+    if (!_isDiffChecked) {
+      currentQuestion = quizQuestions[_currentQuestionIndex];
+      int currentID = currentQuestion['id'];
+      // Chercher les questions de higherDifficultyQuestions avec le même ID que currentID
+      List<Map<String, dynamic>> matchingQuestions = higherDifficultyQuestions
+          .where((question) => question['id'] == currentID)
+          .toList();
+
+      // Filtrer les questions dont la difficulté est inférieure à _difficulty
+      List<Map<String, dynamic>> filteredQuestions = matchingQuestions
+          .where((question) => question['difficulty'] < _difficulty)
+          .toList();
+
+      // Si des questions correspondent, prendre celle avec la difficulté la plus élevée
+      if (filteredQuestions.isNotEmpty) {
+        filteredQuestions
+            .sort((a, b) => b['difficulty'].compareTo(a['difficulty']));
+        currentQuestion = filteredQuestions.first;
+      }
+      storedQuestion = currentQuestion;
+      _isDiffChecked = true;
+      return currentQuestion;
+    } else {
+      return storedQuestion;
+    }
   }
 
   @override
@@ -187,8 +233,8 @@ class _QuizPageState extends State<QuizPage> {
       );
     }
 
-    // Récupérer la question courante
-    Map<String, dynamic> currentQuestion = quizQuestions[_currentQuestionIndex];
+    Map<String, dynamic> currentQuestion = _getCurrentQuestion();
+
     List<String> options = List<String>.from(currentQuestion['options']);
 
     return Scaffold(
