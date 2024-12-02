@@ -315,7 +315,18 @@
       "correct_answer": "Link",
       "options": ["Link", "Zelda", "Ganon", "Samus"],
       "category": "Loisirs",
-      "type": "single-choice"
+      "type": "single-choice",
+      "id": 1,
+      "difficulty": 0
+    },
+    {
+      "question": "Version difficile 1",
+      "correct_answer": "Link",
+      "options": ["Link", "Zelda", "Ganon", "Samus"],
+      "category": "Loisirs",
+      "type": "single-choice",
+      "id": 1,
+      "difficulty": 1
     },
     {
       "question": "Quelle personnage ne fais PAS partie d'un univers de Mario?",
@@ -333,7 +344,36 @@
         "assets/images/Daruma_Otoshi_Kun.png"
       ],
       "category": "Loisirs",
-      "type": "images"
+      "type": "images",
+      "id": 2,
+      "difficulty": 1
+    },
+    {
+      "question": "Version facile 2",
+      "correct_answer": "Link",
+      "options": ["Link", "Zelda", "Ganon", "Samus"],
+      "category": "Loisirs",
+      "type": "single-choice",
+      "id": 2,
+      "difficulty": 0
+    },
+    {
+      "question": "Version facile 3",
+      "correct_answer": "Link",
+      "options": ["Link", "Zelda", "Ganon", "Samus"],
+      "category": "Loisirs",
+      "type": "single-choice",
+      "id": 3,
+      "difficulty": 0
+    },
+    {
+      "question": "Version difficile 3",
+      "correct_answer": "Link",
+      "options": ["Link", "Zelda", "Ganon", "Samus"],
+      "category": "Loisirs",
+      "type": "single-choice",
+      "id": 3,
+      "difficulty": 1
     }
   ]
 }

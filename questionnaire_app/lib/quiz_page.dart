@@ -17,9 +17,13 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   late Map<String, List<Map<String, dynamic>>> questions;
   late List<Map<String, dynamic>> quizQuestions;
+  late List<Map<String, dynamic>> higherDifficultyQuestions;
+  late Map<String, dynamic> storedQuestion;
   int _currentQuestionIndex = 0;
+  int _difficulty = 0;
   String _selectedAnswer = '';
   int _correctAnswersCount = 0; // Variable pour compter les bonnes réponses
+  bool _isDiffChecked = false;
 
   // Fonction pour charger les questions depuis le fichier JSON
   Future<void> _loadQuestions() async {
@@ -35,8 +39,14 @@ class _QuizPageState extends State<QuizPage> {
 
       // Filtrer les questions par catégorie sélectionnée
       quizQuestions = [];
+      higherDifficultyQuestions = [];
       for (String category in widget.selectedCategories) {
-        quizQuestions.addAll(questions[category] ?? []);
+        quizQuestions.addAll(questions[category]
+                ?.where((question) => question["difficulty"] == 0) ??
+            []);
+        higherDifficultyQuestions.addAll(questions[category]
+                ?.where((question) => question["difficulty"] >= 1) ??
+            []);
       }
 
       // Mélanger les questions de manière aléatoire
@@ -50,83 +60,83 @@ class _QuizPageState extends State<QuizPage> {
     _loadQuestions(); // Charger les questions au démarrage
   }
 
-Future<void> _showFeedbackAnimation(bool isCorrect, String correctAnswer) async {
-  final Color color = isCorrect ? Colors.green : Colors.red;
-  final IconData icon = isCorrect ? Icons.check_circle : Icons.cancel;
-  final String message = isCorrect 
-      ? "Bonne réponse !" 
-      : "Mauvaise réponse\nLa bonne réponse était : $correctAnswer";
+  Future<void> _showFeedbackAnimation(
+      bool isCorrect, String correctAnswer) async {
+    final Color color = isCorrect ? Colors.green : Colors.red;
+    final IconData icon = isCorrect ? Icons.check_circle : Icons.cancel;
+    final String message = isCorrect
+        ? "Bonne réponse !"
+        : "Mauvaise réponse\nLa bonne réponse était : $correctAnswer";
 
-  await showDialog(
-    context: context,
-    barrierDismissible: false, // Ne permet pas de fermer la boîte de dialogue en dehors
-    builder: (BuildContext context) {
-      return Stack(
-        children: [
-          // Couverture floue de l'arrière-plan
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0), // Appliquer un flou
-              child: Container(
-                color: Colors.grey.withOpacity(0.7), // Fond semi-transparent
+    await showDialog(
+      context: context,
+      barrierDismissible:
+          false, // Ne permet pas de fermer la boîte de dialogue en dehors
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            // Couverture floue de l'arrière-plan
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                    sigmaX: 5.0, sigmaY: 5.0), // Appliquer un flou
+                child: Container(
+                  color: Colors.grey.withOpacity(0.7), // Fond semi-transparent
+                ),
               ),
             ),
-          ),
-          // Animation au premier plan
-          Center(
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInOut,
-              width: 250,
-              height: 300, // Augmenter la hauteur pour ajouter un bouton
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(icon, size: 80, color: Colors.white),
-                  const SizedBox(height: 20),
-                  Text(
-                    message,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none,
+            // Animation au premier plan
+            Center(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+                width: 250,
+                height: 300, // Augmenter la hauteur pour ajouter un bouton
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(icon, size: 80, color: Colors.white),
+                    const SizedBox(height: 20),
+                    Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Fermer la boîte de dialogue
-                      _nextQuestion(); // Passer à la question suivante
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pop(); // Fermer la boîte de dialogue
+                        _nextQuestion(); // Passer à la question suivante
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      child: const Text(
+                        'Suivant',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    child: const Text(
-                      'Suivant',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
-
-
-
+          ],
+        );
+      },
+    );
+  }
 
   Widget _printQuestionAnswers(
       Map<String, dynamic> currentQuestion, List<String> options) {
@@ -222,53 +232,52 @@ Future<void> _showFeedbackAnimation(bool isCorrect, String correctAnswer) async 
             }).toList(),
           ),
         );
-        case "timeline":
-          double selectedYear = double.parse(currentQuestion['options'][0]);
-          double minYear = double.parse(currentQuestion['options'][0]);
-          double maxYear = double.parse(currentQuestion['options'][1]);
+      case "timeline":
+        double selectedYear = double.parse(currentQuestion['options'][0]);
+        double minYear = double.parse(currentQuestion['options'][0]);
+        double maxYear = double.parse(currentQuestion['options'][1]);
 
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(
-                children: [
-                  // Frise chronologique avec le Slider
-                  Slider(
-                    value: selectedYear,
-                    min: minYear,
-                    max: maxYear,
-                    divisions: (maxYear - minYear).toInt(),
-                    label: selectedYear.toInt().toString(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedYear = value;
-                      });
-                    },
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              children: [
+                // Frise chronologique avec le Slider
+                Slider(
+                  value: selectedYear,
+                  min: minYear,
+                  max: maxYear,
+                  divisions: (maxYear - minYear).toInt(),
+                  label: selectedYear.toInt().toString(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedYear = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                // Afficher l'année sélectionnée
+                Text(
+                  'Année sélectionnée : ${selectedYear.toInt()}',
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const SizedBox(height: 20),
+                // Bouton de validation
+                ElevatedButton(
+                  onPressed: _selectedAnswer.isEmpty
+                      ? () {
+                          _checkAnswer(selectedYear.toInt().toString(),
+                              currentQuestion['correct_answer']);
+                        }
+                      : null,
+                  child: const Text(
+                    'Valider',
+                    style: TextStyle(fontSize: 18),
                   ),
-                  const SizedBox(height: 20),
-                  // Afficher l'année sélectionnée
-                  Text(
-                    'Année sélectionnée : ${selectedYear.toInt()}',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(height: 20),
-                  // Bouton de validation
-                  ElevatedButton(
-                    onPressed: _selectedAnswer.isEmpty
-                        ? () {
-                            _checkAnswer(
-                                selectedYear.toInt().toString(),
-                                currentQuestion['correct_answer']);
-                          }
-                        : null,
-                    child: const Text(
-                      'Valider',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
+                ),
+              ],
+            );
+          },
+        );
 
       default:
         throw Exception("Type de question inconnu");
@@ -280,6 +289,7 @@ Future<void> _showFeedbackAnimation(bool isCorrect, String correctAnswer) async 
       if (_currentQuestionIndex < quizQuestions.length - 1) {
         _currentQuestionIndex++;
         _selectedAnswer = ''; // Réinitialiser la sélection de la réponse
+        _isDiffChecked = false;
       } else {
         // Afficher la page de résultats avec le score final
         Navigator.pushReplacement(
@@ -293,19 +303,56 @@ Future<void> _showFeedbackAnimation(bool isCorrect, String correctAnswer) async 
     });
   }
 
-    void _checkAnswer(String selectedOption, String correctAnswer) async {
-      setState(() {
-        if (selectedOption == correctAnswer) {
-          _correctAnswersCount++; // Incrémenter le nombre de bonnes réponses
-          _selectedAnswer = 'correct';
-        } else {
-          _selectedAnswer = 'incorrect';
+  void _checkAnswer(String selectedOption, String correctAnswer) async {
+    setState(() {
+      if (selectedOption == correctAnswer) {
+        _correctAnswersCount++; // Incrémenter le nombre de bonnes réponses
+        _difficulty++;
+        debugPrint('Difficulty: $_difficulty');
+        _selectedAnswer = 'correct';
+      } else {
+        _selectedAnswer = 'incorrect';
+        if (_difficulty > 0) {
+          _difficulty--;
+          debugPrint('Difficulty: $_difficulty');
         }
-      });
+      }
+    });
 
-      // Appeler l'animation de feedback
-      await _showFeedbackAnimation(_selectedAnswer == 'correct', correctAnswer);
+    // Appeler l'animation de feedback
+    await _showFeedbackAnimation(_selectedAnswer == 'correct', correctAnswer);
+  }
+
+  Map<String, dynamic> _getCurrentQuestion() {
+    Map<String, dynamic> currentQuestion;
+
+    // Checking for higher difficulty questions...
+    if (!_isDiffChecked) {
+      currentQuestion = quizQuestions[_currentQuestionIndex];
+      int currentID = currentQuestion['id'];
+      // Chercher les questions de higherDifficultyQuestions avec le même ID que currentID
+      List<Map<String, dynamic>> matchingQuestions = higherDifficultyQuestions
+          .where((question) => question['id'] == currentID)
+          .toList();
+
+      // Filtrer les questions dont la difficulté est inférieure à _difficulty
+      List<Map<String, dynamic>> filteredQuestions = matchingQuestions
+          .where((question) => question['difficulty'] < _difficulty)
+          .toList();
+
+      // Si des questions correspondent, prendre celle avec la difficulté la plus élevée
+      if (filteredQuestions.isNotEmpty) {
+        filteredQuestions
+            .sort((a, b) => b['difficulty'].compareTo(a['difficulty']));
+        currentQuestion = filteredQuestions.first;
+      }
+      storedQuestion = currentQuestion;
+      _isDiffChecked = true;
+      return currentQuestion;
+    } else {
+      return storedQuestion;
     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -318,8 +365,8 @@ Future<void> _showFeedbackAnimation(bool isCorrect, String correctAnswer) async 
       );
     }
 
-    // Récupérer la question courante
-    Map<String, dynamic> currentQuestion = quizQuestions[_currentQuestionIndex];
+    Map<String, dynamic> currentQuestion = _getCurrentQuestion();
+
     List<String> options = List<String>.from(currentQuestion['options']);
 
     return Scaffold(
