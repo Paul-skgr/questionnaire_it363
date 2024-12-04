@@ -374,6 +374,24 @@
       "type": "single-choice",
       "id": 3,
       "difficulty": 1
+    },
+    {
+      "question": "(Choix multiples) Quels sont des ennemis de Mario",
+      "correct_answer": "Goomba, Koopa Troopa, Boo",
+      "options": ["Goomba", "Koopa Troopa", "Professeur K.Tastroph", "Boo"],
+      "category": "Loisirs",
+      "type": "multiple-choice",
+      "id": 4,
+      "difficulty": 0
+    },
+    {
+      "question": "(Choix multiples) Quels sont des ennemis de Link dans The Legend Of Zelda",
+      "correct_answer": "Octorok, zoras des rivières",
+      "options": ["Octorok", "gorons", "zoras des rivières", "l'arbre Mojo"],
+      "category": "Loisirs",
+      "type": "multiple-choice",
+      "id": 4,
+      "difficulty": 1
     }
   ]
 }

@@ -19,6 +19,7 @@ class _QuizPageState extends State<QuizPage> {
   late List<Map<String, dynamic>> quizQuestions;
   late List<Map<String, dynamic>> higherDifficultyQuestions;
   late Map<String, dynamic> storedQuestion;
+  List<String> multipleChoices = [];
   int _currentQuestionIndex = 0;
   int _difficulty = 0;
   String _selectedAnswer = '';
@@ -169,13 +170,66 @@ class _QuizPageState extends State<QuizPage> {
                 ),
                 onPressed: _selectedAnswer.isEmpty
                     ? () {
-                        _checkAnswer(option, currentQuestion['correct_answer']);
+                        _checkAnswer(option, currentQuestion['correct_answer'],
+                            'single-choice');
                       }
                     : null,
                 child: Text(option, style: const TextStyle(fontSize: 18)),
               ),
             );
           }).toList(),
+        );
+      case "multiple-choice":
+        return Column(
+          children: [
+            ...options.map((option) {
+              final isCorrectAnswer =
+                  option == currentQuestion['correct_answer'];
+              final isSelectedCorrect =
+                  _selectedAnswer == 'correct' && isCorrectAnswer;
+              final isSelectedIncorrect =
+                  _selectedAnswer == 'incorrect' && isCorrectAnswer;
+              final isIncorrectOption =
+                  _selectedAnswer == 'incorrect' && !isCorrectAnswer;
+
+              Color backgroundColor = isSelectedCorrect || isSelectedIncorrect
+                  ? Colors.green
+                  : isIncorrectOption
+                      ? Colors.red
+                      : Colors.blue;
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: CheckboxListTile(
+                  title: Text(option, style: const TextStyle(fontSize: 18)),
+                  value: multipleChoices.contains(option),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value == true) {
+                        multipleChoices.add(option);
+                      } else {
+                        multipleChoices.remove(option);
+                      }
+                    });
+                  },
+                  activeColor: backgroundColor,
+                  checkColor: Colors.white,
+                ),
+              );
+            }).toList(),
+            ElevatedButton(
+              onPressed: _selectedAnswer.isEmpty
+                  ? () {
+                      _checkAnswer(multipleChoices.join(','),
+                          currentQuestion['correct_answer'], 'multiple-choice');
+                    }
+                  : null,
+              child: const Text(
+                'Valider',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
         );
       case "images":
         return SingleChildScrollView(
@@ -212,8 +266,8 @@ class _QuizPageState extends State<QuizPage> {
                   ),
                   onPressed: _selectedAnswer.isEmpty
                       ? () {
-                          _checkAnswer(
-                              option, currentQuestion['correct_answer']);
+                          _checkAnswer(option,
+                              currentQuestion['correct_answer'], 'images');
                         }
                       : null,
                   child: Column(
@@ -266,7 +320,7 @@ class _QuizPageState extends State<QuizPage> {
                   onPressed: _selectedAnswer.isEmpty
                       ? () {
                           _checkAnswer(selectedYear.toInt().toString(),
-                              currentQuestion['correct_answer']);
+                              currentQuestion['correct_answer'], 'timeline');
                         }
                       : null,
                   child: const Text(
@@ -288,10 +342,10 @@ class _QuizPageState extends State<QuizPage> {
     setState(() {
       if (_currentQuestionIndex < quizQuestions.length - 1) {
         _currentQuestionIndex++;
-        _selectedAnswer = ''; // Réinitialiser la sélection de la réponse
+        _selectedAnswer = '';
         _isDiffChecked = false;
+        multipleChoices = [];
       } else {
-        // Afficher la page de résultats avec le score final
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -303,21 +357,48 @@ class _QuizPageState extends State<QuizPage> {
     });
   }
 
-  void _checkAnswer(String selectedOption, String correctAnswer) async {
-    setState(() {
-      if (selectedOption == correctAnswer) {
-        _correctAnswersCount++; // Incrémenter le nombre de bonnes réponses
-        _difficulty++;
-        debugPrint('Difficulty: $_difficulty');
-        _selectedAnswer = 'correct';
-      } else {
-        _selectedAnswer = 'incorrect';
-        if (_difficulty > 0) {
-          _difficulty--;
-          debugPrint('Difficulty: $_difficulty');
-        }
-      }
-    });
+  void _checkAnswer(
+      String selectedOption, String correctAnswer, String type) async {
+    switch (type) {
+      case "multiple-choice":
+        setState(() {
+          List<String> selectedOptions = selectedOption.split(',');
+
+          List<String> correctAnswers = correctAnswer.split(',');
+
+          List<String> correctAnswersCleaned =
+              correctAnswers.map((answer) => answer.trim()).toList();
+
+          if (correctAnswersCleaned
+                  .toSet()
+                  .containsAll(selectedOptions.toSet()) &&
+              selectedOptions.length == correctAnswersCleaned.length) {
+            _correctAnswersCount++; // Incrémenter le nombre de bonnes réponses
+            _difficulty++;
+
+            _selectedAnswer = 'correct';
+          } else {
+            _selectedAnswer = 'incorrect';
+            if (_difficulty > 0) {
+              _difficulty--;
+            }
+          }
+        });
+      default:
+        setState(() {
+          if (selectedOption == correctAnswer) {
+            _correctAnswersCount++; // Incrémenter le nombre de bonnes réponses
+            _difficulty++;
+
+            _selectedAnswer = 'correct';
+          } else {
+            _selectedAnswer = 'incorrect';
+            if (_difficulty > 0) {
+              _difficulty--;
+            }
+          }
+        });
+    }
 
     // Appeler l'animation de feedback
     await _showFeedbackAnimation(_selectedAnswer == 'correct', correctAnswer);
@@ -410,7 +491,7 @@ class _QuizPageState extends State<QuizPage> {
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: _nextQuestion,
+              onPressed: () => _nextQuestion(),
               child: Text(
                 _currentQuestionIndex == quizQuestions.length - 1
                     ? 'Voir les Résultats'
