@@ -54,23 +54,32 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     }
   }
 
-  Future<void> _handleSignIn(String email, String password) async {
-    setState(() => loading = true);
+Future<void> _handleSignIn(String email, String password) async {
+  setState(() => loading = true);
 
-    var result = await _auth.signInWithEmailAndPassword(email, password);
+  var result = await _auth.signInWithEmailAndPassword(email, password);
+
+  if (!mounted) return;
+
+  if (result == null) {
+    setState(() {
+      loading = false;
+      error = 'Invalid email or password.';
+    });
+  } else {
+    bool isVerified = await _auth.isEmailVerified();
 
     if (!mounted) return;
 
-    if (result == null) {
+    if (isVerified) {
+      Navigator.of(context).pushReplacementNamed('/home');
+    } else {
       setState(() {
         loading = false;
-        error = 'Invalid email or password.';
       });
-    } else {
-      setState(() => loading = false);
     }
   }
-
+}
   @override
   Widget build(BuildContext context) {
     return loading

@@ -1,15 +1,14 @@
-import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'resultScreen.dart';
 
 class QuizPage extends StatefulWidget {
   final List<String> selectedCategories;
 
-  const QuizPage({
-    Key? key,
-    required this.selectedCategories,
-  }) : super(key: key);
+  const QuizPage({super.key, required this.selectedCategories});
 
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -17,11 +16,51 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late Map<String, List<Map<String, dynamic>>> questions;
   List<Map<String, dynamic>> quizQuestions = [];
+  late List<Map<String, dynamic>> higherDifficultyQuestions;
+  late Map<String, dynamic> storedQuestion;
+  List<String> multipleChoices = [];
   int _currentQuestionIndex = 0;
+  int _difficulty = 0;
   String _selectedAnswer = '';
   int _correctAnswersCount = 0;
-  bool _isLoading = true; // Indique si les données sont en cours de chargement
+  bool _isDiffChecked = false;
+
+  Future<void> _loadQuestionsFromFirestore() async {
+    try {
+      Map<String, List<Map<String, dynamic>>> loadedQuestions = {};
+
+      for (String category in widget.selectedCategories) {
+        QuerySnapshot snapshot =
+            await _firestore.collection(category).get();
+        List<Map<String, dynamic>> categoryQuestions = snapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList();
+
+        loadedQuestions[category] = categoryQuestions;
+      }
+
+      setState(() {
+        questions = loadedQuestions;
+        quizQuestions = [];
+        higherDifficultyQuestions = [];
+
+        for (String category in widget.selectedCategories) {
+          quizQuestions.addAll(questions[category]
+                  ?.where((question) => question["difficulty"] == 0) ??
+              []);
+          higherDifficultyQuestions.addAll(questions[category]
+                  ?.where((question) => question["difficulty"] >= 1) ??
+              []);
+        }
+
+        quizQuestions.shuffle(Random());
+      });
+    } catch (e) {
+      print("Erreur lors du chargement des questions : $e");
+    }
+  }
 
   @override
   void initState() {
@@ -29,29 +68,80 @@ class _QuizPageState extends State<QuizPage> {
     _loadQuestionsFromFirestore();
   }
 
-  /// Charger les questions depuis Firestore pour les catégories sélectionnées
-  Future<void> _loadQuestionsFromFirestore() async {
-    try {
-      List<Map<String, dynamic>> loadedQuestions = [];
+  Future<void> _showFeedbackAnimation(
+      bool isCorrect, String correctAnswer) async {
+    final Color color = isCorrect ? Colors.green : Colors.red;
+    final IconData icon = isCorrect ? Icons.check_circle : Icons.cancel;
+    final String message = isCorrect
+        ? "Bonne réponse !"
+        : "Mauvaise réponse\nLa bonne réponse était : $correctAnswer";
 
-      for (String category in widget.selectedCategories) {
-        QuerySnapshot snapshot =
-            await _firestore.collection(category).get(); // Récupère les docs
-        for (var doc in snapshot.docs) {
-          loadedQuestions.add(doc.data() as Map<String, dynamic>);
-        }
-      }
-
-      // Mélanger les questions pour varier leur ordre
-      loadedQuestions.shuffle(Random());
-
-      setState(() {
-        quizQuestions = loadedQuestions;
-        _isLoading = false; // Les données sont prêtes
-      });
-    } catch (e) {
-      print("Erreur lors du chargement des questions : $e");
-    }
+    await showDialog(
+      context: context,
+      barrierDismissible:
+          false,
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                    sigmaX: 5.0, sigmaY: 5.0),
+                child: Container(
+                  color: Colors.grey.withOpacity(0.7),
+                ),
+              ),
+            ),
+            Center(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+                width: 250,
+                height: 300,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(icon, size: 80, color: Colors.white),
+                    const SizedBox(height: 20),
+                    Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pop();
+                        _nextQuestion();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      child: const Text(
+                        'Suivant',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _printQuestionAnswers(
@@ -84,7 +174,8 @@ class _QuizPageState extends State<QuizPage> {
                 ),
                 onPressed: _selectedAnswer.isEmpty
                     ? () {
-                        _checkAnswer(option, currentQuestion['correct_answer']);
+                        _checkAnswer(option, currentQuestion['correct_answer'],
+                            'single-choice');
                       }
                     : null,
                 child: Text(option, style: const TextStyle(fontSize: 18)),
@@ -92,56 +183,157 @@ class _QuizPageState extends State<QuizPage> {
             );
           }).toList(),
         );
+      case "multiple-choice":
+        return Column(
+          children: [
+            ...options.map((option) {
+              final isCorrectAnswer =
+                  option == currentQuestion['correct_answer'];
+              final isSelectedCorrect =
+                  _selectedAnswer == 'correct' && isCorrectAnswer;
+              final isSelectedIncorrect =
+                  _selectedAnswer == 'incorrect' && isCorrectAnswer;
+              final isIncorrectOption =
+                  _selectedAnswer == 'incorrect' && !isCorrectAnswer;
+
+              Color backgroundColor = isSelectedCorrect || isSelectedIncorrect
+                  ? Colors.green
+                  : isIncorrectOption
+                      ? Colors.red
+                      : Colors.blue;
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: CheckboxListTile(
+                  title: Text(option, style: const TextStyle(fontSize: 18)),
+                  value: multipleChoices.contains(option),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value == true) {
+                        multipleChoices.add(option);
+                      } else {
+                        multipleChoices.remove(option);
+                      }
+                    });
+                  },
+                  activeColor: backgroundColor,
+                  checkColor: Colors.white,
+                ),
+              );
+            }).toList(),
+            ElevatedButton(
+              onPressed: _selectedAnswer.isEmpty
+                  ? () {
+                      _checkAnswer(multipleChoices.join(','),
+                          currentQuestion['correct_answer'], 'multiple-choice');
+                    }
+                  : null,
+              child: const Text(
+                'Valider',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        );
       case "images":
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: options.map((option) {
-            final isCorrectAnswer = option == currentQuestion['correct_answer'];
-            final isSelectedCorrect =
-                _selectedAnswer == 'correct' && isCorrectAnswer;
-            final isSelectedIncorrect =
-                _selectedAnswer == 'incorrect' && isCorrectAnswer;
-            final isIncorrectOption =
-                _selectedAnswer == 'incorrect' && !isCorrectAnswer;
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: options.map((option) {
+              final isCorrectAnswer =
+                  option == currentQuestion['correct_answer'];
+              final isSelectedCorrect =
+                  _selectedAnswer == 'correct' && isCorrectAnswer;
+              final isSelectedIncorrect =
+                  _selectedAnswer == 'incorrect' && isCorrectAnswer;
+              final isIncorrectOption =
+                  _selectedAnswer == 'incorrect' && !isCorrectAnswer;
 
-            Color backgroundColor = isSelectedCorrect || isSelectedIncorrect
-                ? Colors.green
-                : isIncorrectOption
-                    ? Colors.red
-                    : Colors.blue;
+              Color backgroundColor = isSelectedCorrect || isSelectedIncorrect
+                  ? Colors.green
+                  : isIncorrectOption
+                      ? Colors.red
+                      : Colors.blue;
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: backgroundColor,
-                  disabledBackgroundColor: backgroundColor,
-                  minimumSize: const Size(100, 100),
-                  maximumSize: const Size(150, 150),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: backgroundColor,
+                    disabledBackgroundColor: backgroundColor,
+                    minimumSize: const Size(100, 100),
+                    maximumSize: const Size(150, 150),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: _selectedAnswer.isEmpty
+                      ? () {
+                          _checkAnswer(option,
+                              currentQuestion['correct_answer'], 'images');
+                        }
+                      : null,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        '${currentQuestion["images"][options.indexOf(option)]}',
+                        width: 80,
+                        height: 80,
+                      ),
+                      Text(option, style: const TextStyle(fontSize: 18)),
+                    ],
                   ),
                 ),
-                onPressed: _selectedAnswer.isEmpty
-                    ? () {
-                        _checkAnswer(option, currentQuestion['correct_answer']);
-                      }
-                    : null,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      '../assets/images/${currentQuestion["images"][options.indexOf(option)]}',
-                      width: 80,
-                      height: 80,
-                    ),
-                    Text(option, style: const TextStyle(fontSize: 18)),
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ),
         );
+      case "timeline":
+        double selectedYear = double.parse(currentQuestion['options'][0]);
+        double minYear = double.parse(currentQuestion['options'][0]);
+        double maxYear = double.parse(currentQuestion['options'][1]);
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              children: [
+                Slider(
+                  value: selectedYear,
+                  min: minYear,
+                  max: maxYear,
+                  divisions: (maxYear - minYear).toInt(),
+                  label: selectedYear.toInt().toString(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedYear = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Année sélectionnée : ${selectedYear.toInt()}',
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _selectedAnswer.isEmpty
+                      ? () {
+                          _checkAnswer(selectedYear.toInt().toString(),
+                              currentQuestion['correct_answer'], 'timeline');
+                        }
+                      : null,
+                  child: const Text(
+                    'Valider',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+
       default:
         throw Exception("Type de question inconnu");
     }
@@ -151,7 +343,9 @@ class _QuizPageState extends State<QuizPage> {
     setState(() {
       if (_currentQuestionIndex < quizQuestions.length - 1) {
         _currentQuestionIndex++;
-        _selectedAnswer = ''; // Réinitialiser la sélection de la réponse
+        _selectedAnswer = '';
+        _isDiffChecked = false;
+        multipleChoices = [];
       } else {
         Navigator.pushReplacement(
           context,
@@ -164,41 +358,92 @@ class _QuizPageState extends State<QuizPage> {
     });
   }
 
-  void _checkAnswer(String selectedOption, String correctAnswer) {
-    setState(() {
-      if (selectedOption == correctAnswer) {
-        _correctAnswersCount++;
+  void _checkAnswer(
+      String selectedOption, String correctAnswer, String type) async {
+    switch (type) {
+      case "multiple-choice":
+        setState(() {
+          List<String> selectedOptions = selectedOption.split(',');
+
+          List<String> correctAnswers = correctAnswer.split(',');
+
+          List<String> correctAnswersCleaned =
+              correctAnswers.map((answer) => answer.trim()).toList();
+
+          if (correctAnswersCleaned
+                  .toSet()
+                  .containsAll(selectedOptions.toSet()) &&
+              selectedOptions.length == correctAnswersCleaned.length) {
+            _correctAnswersCount++;
+            _difficulty++;
+
+            _selectedAnswer = 'correct';
+          } else {
+            _selectedAnswer = 'incorrect';
+            if (_difficulty > 0) {
+              _difficulty--;
+            }
+          }
+        });
+      default:
+        setState(() {
+          if (selectedOption == correctAnswer) {
+            _correctAnswersCount++;
+            _difficulty++;
+
+            _selectedAnswer = 'correct';
+          } else {
+            _selectedAnswer = 'incorrect';
+            if (_difficulty > 0) {
+              _difficulty--;
+            }
+          }
+        });
+    }
+
+    await _showFeedbackAnimation(_selectedAnswer == 'correct', correctAnswer);
+  }
+
+  Map<String, dynamic> _getCurrentQuestion() {
+    Map<String, dynamic> currentQuestion;
+
+    if (!_isDiffChecked) {
+      currentQuestion = quizQuestions[_currentQuestionIndex];
+      int currentID = currentQuestion['id'];
+      List<Map<String, dynamic>> matchingQuestions = higherDifficultyQuestions
+          .where((question) => question['id'] == currentID)
+          .toList();
+
+      List<Map<String, dynamic>> filteredQuestions = matchingQuestions
+          .where((question) => question['difficulty'] < _difficulty)
+          .toList();
+
+      if (filteredQuestions.isNotEmpty) {
+        filteredQuestions
+            .sort((a, b) => b['difficulty'].compareTo(a['difficulty']));
+        currentQuestion = filteredQuestions.first;
       }
-      _selectedAnswer =
-          selectedOption == correctAnswer ? 'correct' : 'incorrect';
-    });
+      storedQuestion = currentQuestion;
+      _isDiffChecked = true;
+      return currentQuestion;
+    } else {
+      return storedQuestion;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Quiz')),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     if (quizQuestions.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text('Quiz')),
         body: const Center(
-          child: Text(
-            'Aucune question disponible pour les catégories sélectionnées.',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.center,
-          ),
-        ),
+            child:
+                CircularProgressIndicator()),
       );
     }
 
-    Map<String, dynamic> currentQuestion = quizQuestions[_currentQuestionIndex];
+    Map<String, dynamic> currentQuestion = _getCurrentQuestion();
+
     List<String> options = List<String>.from(currentQuestion['options']);
 
     return Scaffold(
@@ -227,11 +472,20 @@ class _QuizPageState extends State<QuizPage> {
             ),
             const SizedBox(height: 30),
             Expanded(
-              child: _printQuestionAnswers(currentQuestion, options),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: _printQuestionAnswers(currentQuestion, options),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: _nextQuestion,
+              onPressed: () => _nextQuestion(),
               child: Text(
                 _currentQuestionIndex == quizQuestions.length - 1
                     ? 'Voir les Résultats'
