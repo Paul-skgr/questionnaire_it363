@@ -25,6 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
     'Loisirs': const Color.fromARGB(255, 235, 13, 13),
   };
 
+  String _feedbackComment = "";
+
   void _startQuiz() {
     List<String> selectedCategories = categories.entries
         .where((entry) => entry.value)
@@ -50,6 +52,61 @@ class _HomeScreenState extends State<HomeScreen> {
         const SnackBar(content: Text('Erreur lors de la déconnexion')),
       );
     }
+  }
+
+  void showFeedback() {
+    print(_feedbackComment);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Feedback'),
+          content: const Text('Merci pour votre feedback!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Fermer'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _submitFeedback() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Feedback'),
+          content: SizedBox(
+            height: 150,
+            child: TextField(
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+              onChanged: (value) {
+                setState(() {
+                  _feedbackComment = value;
+                });
+              },
+              decoration:
+                  const InputDecoration(hintText: "Entrez votre feedback ici"),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                showFeedback();
+              },
+              child: const Text('Soumettre'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -107,6 +164,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: FloatingActionButton(
+          tooltip: 'Feedback',
+          onPressed: _submitFeedback,
+          child: const Icon(Icons.favorite),
         ),
       ),
     );

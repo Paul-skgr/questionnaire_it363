@@ -7,6 +7,7 @@ import 'package:questionnaire_app/screens/splashscreen_wrapper.dart';
 import 'package:questionnaire_app/screens/home/home_screen.dart';
 import 'package:questionnaire_app/screens/authenticate/verification_screen.dart';
 import 'package:questionnaire_app/firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -25,10 +26,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: SplashScreenWrapper(),
-          routes: {
-            '/home': (context) => HomeScreen(),
-            '/verify': (context) => VerificationScreen(),
-          },
+        routes: {
+          '/home': (context) => HomeScreen(),
+          '/verify': (context) => VerificationScreen(),
+        },
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
