@@ -1,25 +1,31 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:questionnaire_app/models/user.dart';
 
-class AuthenticationService{
+class AuthenticationService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   AppUser? _userFromFirebaseUser(User? user) {
     return user != null ? AppUser(uid: user.uid) : null;
   }
+
   Stream<AppUser?> get user {
     return _auth.authStateChanges().map(_userFromFirebaseUser);
   }
+
+  User? get currentUser => _auth.currentUser;
+
   Future signInWithEmailAndPassword(String email, String password) async {
-    try{
+    try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
-        email: email, password: password);
+          email: email, password: password);
       User? user = result.user;
       return _userFromFirebaseUser(user);
-    } catch(exception){
+    } catch (exception) {
       print(exception.toString());
       return null;
     }
   }
+
   Future registerWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
@@ -45,9 +51,9 @@ class AuthenticationService{
   }
 
   Future signOut() async {
-    try{
+    try {
       return await _auth.signOut();
-    } catch(exception){
+    } catch (exception) {
       print(exception.toString());
       return null;
     }
