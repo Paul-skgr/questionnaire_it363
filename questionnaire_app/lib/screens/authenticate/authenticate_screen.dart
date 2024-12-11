@@ -86,23 +86,27 @@ Future<void> _handleSignIn(String email, String password) async {
         ? Loading()
         : Scaffold(
             backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: Colors.blueGrey,
-              elevation: 0.0,
-              title: Text(showSignIn
-                  ? 'Sign in to the quiz platform'
-                  : 'Register to quiz platform'),
-              actions: <Widget>[
-                TextButton.icon(
-                  icon: Icon(
-                    Icons.person,
-                    color: Colors.white,
-                  ),
-                  label: Text(showSignIn ? 'Sign In' : "Register"),
-                  onPressed: () => toggleView(),
-                ),
-              ],
+           appBar: AppBar(
+            backgroundColor: Colors.blueGrey,
+            elevation: 0.0,
+            title: Text(
+              showSignIn ? 'Sign in to the quiz platform' : 'Register to quiz platform',
             ),
+            actions: <Widget>[
+              TextButton.icon(
+                icon: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  showSignIn ? 'Sign In' : "Register",
+                  style: TextStyle(color: const Color.fromARGB(255, 166, 228, 115), fontWeight: FontWeight.bold),
+                ),
+                onPressed: () => toggleView(),
+              ),
+            ],
+          ),
+
             body: Container(
               padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
               child: Form(

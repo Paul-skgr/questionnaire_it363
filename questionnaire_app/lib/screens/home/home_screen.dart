@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:questionnaire_app/quiz_page.dart';
 import 'package:questionnaire_app/services/authentication.dart';
 
@@ -12,18 +13,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   Map<String, bool> categories = {
     'Histoire': false,
     'Sport': false,
     'Sciences': false,
     'Loisirs': false,
   };
+
   Map<String, Color> categoryColors = {
     'Histoire': Colors.blue,
     'Sport': Colors.orange,
     'Sciences': Colors.green,
     'Loisirs': const Color.fromARGB(255, 235, 13, 13),
   };
+
+  String _feedbackComment = "";
 
   void _startQuiz() {
     List<String> selectedCategories = categories.entries
@@ -45,11 +51,72 @@ class _HomeScreenState extends State<HomeScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Déconnexion réussie')),
       );
+      Navigator.of(context).pushReplacementNamed('/authenticate');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erreur lors de la déconnexion')),
       );
     }
+  }
+
+  void _submitFeedbackToFirestore(String feedback) async {
+    try {
+      final currentUser = widget._auth.currentUser;
+      if (currentUser != null) {
+        await _firestore.collection('feedback').add({
+          'userId': currentUser.uid,
+          'feedback': feedback,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Merci pour votre feedback !')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Vous devez être connecté pour envoyer un feedback')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erreur lors de l\'envoi du feedback')),
+      );
+    }
+  }
+  void _submitFeedback() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Feedback'),
+          content: SizedBox(
+            height: 150,
+            child: TextField(
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+              onChanged: (value) {
+                _feedbackComment = value;
+              },
+              decoration:
+                  const InputDecoration(hintText: "Entrez votre feedback ici"),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (_feedbackComment.isNotEmpty) {
+                  _submitFeedbackToFirestore(_feedbackComment);
+                  setState(() {
+                    _feedbackComment = ""; // Reset feedback field after submission
+                  });
+                }
+              },
+              child: const Text('Soumettre'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -107,6 +174,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: FloatingActionButton(
+          tooltip: 'Feedback',
+          onPressed: _submitFeedback,
+          child: const Icon(Icons.favorite),
         ),
       ),
     );
