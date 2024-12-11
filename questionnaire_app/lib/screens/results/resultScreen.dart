@@ -3,16 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ResultPage extends StatelessWidget {
-  final int correctAnswersCount;
+  final double score;
+  final double scoreMax;
   final int totalQuestions;
+  final int correctAnswersCount;
 
   const ResultPage({
     super.key,
+    required this.score,
+    required this.scoreMax,
     required this.correctAnswersCount,
     required this.totalQuestions,
   });
 
-    Future<void> _saveResult() async {
+  Future<void> _saveResult() async {
     final User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -21,14 +25,14 @@ class ResultPage extends StatelessWidget {
           .doc(user.uid)
           .collection('quiz_results')
           .add({
-        'score': correctAnswersCount,
+        'score': score,
         'totalQuestions': totalQuestions,
         'timestamp': FieldValue.serverTimestamp(),
       });
     }
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     _saveResult();
 
@@ -51,7 +55,7 @@ class ResultPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Votre score est de ${(correctAnswersCount / totalQuestions * 100).toStringAsFixed(2)}%.',
+              'Votre score est de ${score.toStringAsFixed(2)} / ${scoreMax.toStringAsFixed(2)} (Les pertes et gains de points sont variables en fonction de la difficulté de chacune).',
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),

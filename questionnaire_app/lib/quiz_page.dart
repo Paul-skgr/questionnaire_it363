@@ -24,6 +24,8 @@ class _QuizPageState extends State<QuizPage> {
   int _currentQuestionIndex = 0;
   int _difficulty = 0;
   String _selectedAnswer = '';
+  double _score = 0;
+  double _scoreMax = 0;
   int _correctAnswersCount = 0;
   bool _isDiffChecked = false;
 
@@ -175,7 +177,8 @@ class _QuizPageState extends State<QuizPage> {
                           _checkAnswer(
                               option,
                               currentQuestion['correct_answer'],
-                              'single-choice');
+                              'single-choice',
+                              currentQuestion['difficulty']);
                         }
                       : null,
                   child: Text(option, style: const TextStyle(fontSize: 18)),
@@ -220,7 +223,8 @@ class _QuizPageState extends State<QuizPage> {
                         _checkAnswer(
                             multipleChoices.join(','),
                             currentQuestion['correct_answer'],
-                            'multiple-choice');
+                            'multiple-choice',
+                            currentQuestion['difficulty']);
                       }
                     : null,
                 child: const Text(
@@ -267,8 +271,11 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                       onPressed: _selectedAnswer.isEmpty
                           ? () {
-                              _checkAnswer(option,
-                                  currentQuestion['correct_answer'], 'images');
+                              _checkAnswer(
+                                  option,
+                                  currentQuestion['correct_answer'],
+                                  'images',
+                                  currentQuestion['difficulty']);
                             }
                           : null,
                       child: Column(
@@ -318,8 +325,11 @@ class _QuizPageState extends State<QuizPage> {
                   ElevatedButton(
                     onPressed: _selectedAnswer.isEmpty
                         ? () {
-                            _checkAnswer(selectedYear.toInt().toString(),
-                                currentQuestion['correct_answer'], 'timeline');
+                            _checkAnswer(
+                                selectedYear.toInt().toString(),
+                                currentQuestion['correct_answer'],
+                                'timeline',
+                                currentQuestion['difficulty']);
                           }
                         : null,
                     child: const Text(
@@ -360,8 +370,10 @@ class _QuizPageState extends State<QuizPage> {
             context,
             MaterialPageRoute(
                 builder: (context) => ResultPage(
-                    correctAnswersCount: _correctAnswersCount,
-                    totalQuestions: quizQuestions.length)),
+                    score: _score,
+                    scoreMax: _scoreMax,
+                    totalQuestions: quizQuestions.length,
+                    correctAnswersCount: _correctAnswersCount)),
           );
         }
       });
@@ -371,8 +383,15 @@ class _QuizPageState extends State<QuizPage> {
     }
   }
 
-  void _checkAnswer(
-      String selectedOption, String correctAnswer, String type) async {
+  void _checkAnswer(String selectedOption, String correctAnswer, String type,
+      int questionDifficulty) async {
+    const double bonusBase = 0.5; // Base pour le bonus
+
+    // Fonction pour calculer l'effet logarithmique de la difficulté
+    double _getLogarithmicEffect(int difficulty) {
+      return difficulty <= 0 ? 0 : 0 + log(difficulty);
+    }
+
     try {
       switch (type) {
         case "multiple-choice":
@@ -384,37 +403,50 @@ class _QuizPageState extends State<QuizPage> {
             List<String> correctAnswersCleaned =
                 correctAnswers.map((answer) => answer.trim()).toList();
 
+            double logEffect = _getLogarithmicEffect(1 + questionDifficulty);
+
             if (correctAnswersCleaned
                     .toSet()
                     .containsAll(selectedOptions.toSet()) &&
                 selectedOptions.length == correctAnswersCleaned.length) {
-              _correctAnswersCount++;
               _difficulty++;
-
+              _correctAnswersCount++;
+              _score += 1 +
+                  logEffect *
+                      bonusBase; // Gain logarithmique pour une bonne réponse
               _selectedAnswer = 'correct';
+              _scoreMax += 1 + logEffect * bonusBase;
             } else {
               _selectedAnswer = 'incorrect';
               if (_difficulty > 0) {
                 _difficulty--;
               }
+              _scoreMax += 1;
             }
           });
           break;
         default:
           setState(() {
+            double logEffect = _getLogarithmicEffect(1 + questionDifficulty);
+
             if (selectedOption == correctAnswer) {
               _correctAnswersCount++;
               _difficulty++;
-
+              _score += 1 +
+                  logEffect *
+                      bonusBase; // Gain logarithmique pour une bonne réponse
               _selectedAnswer = 'correct';
+              _scoreMax += 1 + logEffect * bonusBase;
             } else {
               _selectedAnswer = 'incorrect';
               if (_difficulty > 0) {
                 _difficulty--;
               }
+              _scoreMax += 1;
             }
           });
       }
+      print("score $_score");
 
       await _showFeedbackAnimation(_selectedAnswer == 'correct', correctAnswer);
     } catch (e) {
