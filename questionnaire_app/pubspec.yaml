@@ -94,3 +94,5 @@ flutter:
   # see https://flutter.dev/to/font-from-package
   assets:
     - images/
+    - assets/images/map.png
+    - assets/images/terrain.png
