@@ -48,12 +48,14 @@ class _QuizPageState extends State<QuizPage> {
         higherDifficultyQuestions = [];
 
         for (String category in widget.selectedCategories) {
-          quizQuestions.addAll(questions[category]
-                  ?.where((question) => question["difficulty"] == 0) ??
-              []);
-          higherDifficultyQuestions.addAll(questions[category]
-                  ?.where((question) => question["difficulty"] >= 1) ??
-              []);
+          if (questions[category]?.isEmpty ?? true) {
+            Navigator.pop(context);
+            return;
+          }
+          quizQuestions.addAll(questions[category]!
+              .where((question) => question["difficulty"] == 0));
+          higherDifficultyQuestions.addAll(questions[category]!
+              .where((question) => question["difficulty"] >= 1));
         }
 
         quizQuestions.shuffle(Random());
@@ -201,11 +203,9 @@ class _QuizPageState extends State<QuizPage> {
                       value: multipleChoices.contains(option),
                       onChanged: (bool? value) {
                         setState(() {
-                          if (value == true) {
-                            multipleChoices.add(option);
-                          } else {
-                            multipleChoices.remove(option);
-                          }
+                          value == true
+                              ? multipleChoices.add(option)
+                              : multipleChoices.remove(option);
                         });
                       },
                       title: Text(option, style: const TextStyle(fontSize: 18)),
@@ -385,9 +385,9 @@ class _QuizPageState extends State<QuizPage> {
 
   void _checkAnswer(String selectedOption, String correctAnswer, String type,
       int questionDifficulty) async {
-    const double bonusBase = 0.5; // Base pour le bonus
+    const double bonusBase = 0.5; // base pour le bonus
 
-    // Fonction pour calculer l'effet logarithmique de la difficulté
+    // fonction pour calculer l'effet logarithmique de la difficulté
     double _getLogarithmicEffect(int difficulty) {
       return difficulty <= 0 ? 0 : 0 + log(difficulty);
     }
@@ -435,8 +435,8 @@ class _QuizPageState extends State<QuizPage> {
               _score += 1 +
                   logEffect *
                       bonusBase; // Gain logarithmique pour une bonne réponse
-              _selectedAnswer = 'correct';
               _scoreMax += 1 + logEffect * bonusBase;
+              _selectedAnswer = 'correct';
             } else {
               _selectedAnswer = 'incorrect';
               if (_difficulty > 0) {
@@ -459,31 +459,43 @@ class _QuizPageState extends State<QuizPage> {
       Map<String, dynamic> currentQuestion;
 
       if (!_isDiffChecked) {
+        //permet de fermer cette logique pour ne vérifier quel question prendre qu'une fois
         currentQuestion = quizQuestions[_currentQuestionIndex];
-        int currentID = currentQuestion['id'];
+        int currentID = currentQuestion[
+            'id']; //chaque question à un ID unique partagé entre les difficultées
         List<Map<String, dynamic>> matchingQuestions = higherDifficultyQuestions
-            .where((question) => question['id'] == currentID)
-            .toList();
+            .where((question) =>
+                question['id'] ==
+                currentID) //on prends toutes les versions de difficultés plus
+            .toList(); // élevés de la question correspondante
 
         List<Map<String, dynamic>> filteredQuestions = matchingQuestions
-            .where((question) => question['difficulty'] < _difficulty)
-            .toList();
+            .where((question) =>
+                question['difficulty'] <
+                _difficulty) //on prends les questions que
+            .toList(); //l'utilisateur dépasse en difficulté
 
+        //on vérifie si l'utilisateur est éligible à une question plus dure
         if (filteredQuestions.isNotEmpty) {
           filteredQuestions
               .sort((a, b) => b['difficulty'].compareTo(a['difficulty']));
-          currentQuestion = filteredQuestions.first;
+          currentQuestion =
+              filteredQuestions.first; //on prend la question la plus difficile
         }
-        storedQuestion = currentQuestion;
+        storedQuestion =
+            currentQuestion; //permet d'empêcher un changement de la question actuelle
+        //par l'originale la plus facile après un rafraîchissement
         _isDiffChecked = true;
         return currentQuestion;
       } else {
+        // si la difficulté est vérifié alors on retourne la question stockée pour éviter les
+        //problèmes de rafraîchissement
         return storedQuestion;
       }
     } catch (e) {
       print('_isDiffChecked: $_isDiffChecked');
       print("Erreur lors de la récupération de la question actuelle : $e");
-      rethrow;
+      rethrow; //gestion en arbre de l'erreur.
     }
   }
 
