@@ -39,6 +39,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
+  firebase_storage: ^12.3.7
 
 dev_dependencies:
   flutter_test:
@@ -94,3 +95,5 @@ flutter:
   # see https://flutter.dev/to/font-from-package
   assets:
     - images/
+    - assets/images/map.png
+    - assets/images/terrain.png

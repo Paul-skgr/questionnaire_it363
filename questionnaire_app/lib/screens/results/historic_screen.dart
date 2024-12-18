@@ -36,7 +36,7 @@ class _HistoricScreenState extends State<HistoricScreen> {
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Retour à la page précédente',
           onPressed: () {
-            Navigator.of(context).pop();
+              Navigator.of(context).pop();
           },
         ),
         actions: [
@@ -44,7 +44,7 @@ class _HistoricScreenState extends State<HistoricScreen> {
             icon: const Icon(Icons.home),
             tooltip: 'Retour à l\'accueil',
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed('/home');
+              Navigator.of(context).pushNamed('/home');
             },
           ),
         ],
@@ -82,7 +82,7 @@ class _HistoricScreenState extends State<HistoricScreen> {
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.score,
                     color: Colors.blue,
                     size: 40,

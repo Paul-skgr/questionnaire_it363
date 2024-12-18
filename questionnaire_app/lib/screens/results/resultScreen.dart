@@ -68,7 +68,7 @@ class ResultPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed('/history');
+                Navigator.of(context).pushNamed('/history');
               },
               child: const Text('Voir l’historique des scores'),
             ),

@@ -25,7 +25,553 @@ class JsonToFirestorePage extends StatelessWidget {
 
   // Votre JSON
   final Map<String, dynamic> jsonData = {
-  };
+   "Histoire": [
+    {
+      "question": "Quelle civilisation a construit les pyramides de Gizeh ?",
+      "correct_answer": "Égyptiens",
+      "options": ["Romains", "Grecs", "Égyptiens", "Mayas"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 1,
+      "difficulty": 0
+    },
+    {
+      "question": "En quelle année Christophe Colomb a-t-il découvert l'Amérique ?",
+      "correct_answer": "1492",
+      "options": ["1453", "1492", "1501", "1520"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 2,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel événement marque le début de la Révolution française ?",
+      "correct_answer": "Prise de la Bastille",
+      "options": ["Serment du Jeu de Paume", "Prise de la Bastille", "Déclaration des Droits de l'Homme", "Chute de Robespierre"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 3,
+      "difficulty": 0
+    },
+    {
+      "question": "Quelles grandes civilisations ont prospéré en Mésoamérique ?",
+      "correct_answer": "Mayas, Aztèques, Olmèques",
+      "options": ["Mayas", "Aztèques", "Olmèques", "Incass"],
+      "category": "Histoire",
+      "type": "multiple-choice",
+      "id": 4,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel pays Napoléon a-t-il tenté d'envahir en 1812, conduisant à sa défaite ?",
+      "correct_answer": "Russie",
+      "options": ["Espagne", "Angleterre", "Russie", "Prusse"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 5,
+      "difficulty": 0
+    },
+    {
+      "question": "Quels empereurs célèbres ont marqué l'Empire romain ?",
+      "correct_answer": "César, Auguste, Néron",
+      "options": ["César", "Auguste", "Néron", "Louis XIV"],
+      "category": "Histoire",
+      "type": "multiple-choice",
+      "id": 6,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel était le nom de la route commerciale entre l'Europe et l'Asie ?",
+      "correct_answer": "Route de la Soie",
+      "options": ["Route de l'Or", "Route de la Soie", "Route des Épices", "Route Maritime"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 7,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel était le principal matériau utilisé pour les outils à l'âge de pierre ?",
+      "correct_answer": "Pierre",
+      "options": ["Pierre", "Fer", "Bronze", "Argile"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 8,
+      "difficulty": 0
+    },
+    {
+      "question": "Quelles révolutions ont changé l'histoire moderne ?",
+      "correct_answer": "Industrielle, Française, Américaine",
+      "options": ["Industrielle", "Française", "Américaine", "Russe"],
+      "category": "Histoire",
+      "type": "multiple-choice",
+      "id": 9,
+      "difficulty": 0
+    },
+    {
+      "question": "Comment s'appelle l'époque historique qui a suivi la Préhistoire ?",
+      "correct_answer": "Antiquité",
+      "options": ["Antiquité", "Moyen Âge", "Renaissance", "Temps modernes"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 10,
+      "difficulty": 0
+    },
+    {
+      "question": "Quelle bataille a marqué la fin de Napoléon ?",
+      "correct_answer": "Waterloo",
+      "options": ["Leipzig", "Waterloo", "Austerlitz", "Iéna"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 1,
+      "difficulty": 1
+    },
+    {
+      "question": "Quels événements sont associés à la Seconde Guerre mondiale ?",
+      "correct_answer": "Débarquement de Normandie, Pearl Harbor, Bombardement de Hiroshima",
+      "options": ["Débarquement de Normandie", "Pearl Harbor", "Chute de Berlin", "Bombardement de Hiroshima"],
+      "category": "Histoire",
+      "type": "multiple-choice",
+      "id": 2,
+      "difficulty": 1
+    },
+    {
+      "question": "Qui était le roi de France lors de la Révolution française ?",
+      "correct_answer": "Louis XVI",
+      "options": ["Louis XIV", "Louis XV", "Louis XVI", "Napoléon"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 3,
+      "difficulty": 1
+    },
+    {
+      "question": "Quel traité a mis fin à la Première Guerre mondiale ?",
+      "correct_answer": "Traité de Versailles",
+      "options": ["Traité de Versailles", "Traité de Tordesillas", "Traité de Paris", "Traité de Vienne"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 4,
+      "difficulty": 1
+    },
+    {
+      "question": "Quels explorateurs ont marqué les grandes découvertes ?",
+      "correct_answer": "Magellan, Colomb, Vasco de Gama",
+      "options": ["Magellan", "Colomb", "Vasco de Gama", "Marco Polo"],
+      "category": "Histoire",
+      "type": "multiple-choice",
+      "id": 5,
+      "difficulty": 1
+    },
+    {
+      "question": "Quel empire s'est effondré après la chute de Constantinople en 1453 ?",
+      "correct_answer": "Empire byzantin",
+      "options": ["Empire romain", "Empire byzantin", "Empire ottoman", "Empire carolingien"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 6,
+      "difficulty": 1
+    },
+    {
+      "question": "Quelles dynasties ont marqué la Chine impériale ?",
+      "correct_answer": "Ming, Tang, Qing",
+      "options": ["Ming", "Tang", "Qing", "Song"],
+      "category": "Histoire",
+      "type": "multiple-choice",
+      "id": 7,
+      "difficulty": 1
+    },
+    {
+      "question": "Qui a écrit \"L'Art de la Guerre\" ?",
+      "correct_answer": "Sun Tzu",
+      "options": ["Sun Tzu", "Confucius", "Machiavel", "Clausewitz"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 8,
+      "difficulty": 1
+    },
+    {
+      "question": "Quelle civilisation a inventé le calendrier solaire ?",
+      "correct_answer": "Mayas",
+      "options": ["Égyptiens", "Mayas", "Babyloniens", "Romains"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 9,
+      "difficulty": 1
+    },
+    {
+      "question": "Quel empire était connu pour sa route royale reliant Sardes à Suse ?",
+      "correct_answer": "Empire perse",
+      "options": ["Empire romain", "Empire perse", "Empire ottoman", "Empire grec"],
+      "category": "Histoire",
+      "type": "single-choice",
+      "id": 10,
+      "difficulty": 1
+    }
+  ],
+"Sport": [
+    {
+      "question": "Quel est le nombre de joueurs dans une équipe de football ?",
+      "correct_answer": "11",
+      "options": ["10", "11", "12", "15"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 1,
+      "difficulty": 0
+    },
+    {
+      "question": "Dans quel sport utilise-t-on une crosse et une rondelle ?",
+      "correct_answer": "Hockey sur glace",
+      "options": ["Hockey sur glace", "Lacrosse", "Baseball", "Curling"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 2,
+      "difficulty": 0
+    },
+    {
+      "question": "Combien de sets faut-il gagner pour remporter un match de tennis en Grand Chelem chez les hommes ?",
+      "correct_answer": "3",
+      "options": ["2", "3", "4", "5"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 3,
+      "difficulty": 0
+    },
+    {
+      "question": "Dans quels sports joue-t-on avec une balle ?",
+      "correct_answer": "Tennis, Basketball, Football",
+      "options": ["Tennis", "Basketball", "Football", "Escrime"],
+      "category": "Sport",
+      "type": "multiple-choice",
+      "id": 4,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel est le sport le plus pratiqué au monde ?",
+      "correct_answer": "Football",
+      "options": ["Basketball", "Football", "Cricket", "Rugby"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 5,
+      "difficulty": 0
+    },
+    {
+      "question": "Quels sont les sports olympiques d'hiver ?",
+      "correct_answer": "Ski, Patinage, Biathlon",
+      "options": ["Ski", "Patinage", "Biathlon", "Natation"],
+      "category": "Sport",
+      "type": "multiple-choice",
+      "id": 6,
+      "difficulty": 0
+    },
+    {
+      "question": "Combien de points vaut un panier au basketball en dehors de la ligne des trois points ?",
+      "correct_answer": "3",
+      "options": ["1", "2", "3", "4"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 7,
+      "difficulty": 0
+    },
+    {
+      "question": "Dans quel sport utilise-t-on un filet et une raquette ?",
+      "correct_answer": "Tennis",
+      "options": ["Tennis", "Ping-pong", "Badminton", "Volleyball"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 8,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel joueur de football a remporté le Ballon d'or le plus de fois ?",
+      "correct_answer": "Lionel Messi",
+      "options": ["Lionel Messi", "Cristiano Ronaldo", "Zinedine Zidane", "Pelé"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 9,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel pays a remporté le plus de Coupes du Monde de football ?",
+      "correct_answer": "Brésil",
+      "options": ["Brésil", "Allemagne", "Italie", "Argentine"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 10,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel marathon célèbre traverse les cinq arrondissements de New York ?",
+      "correct_answer": "Marathon de New York",
+      "options": ["Marathon de New York", "Marathon de Boston", "Marathon de Chicago", "Marathon de Londres"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 1,
+      "difficulty": 1
+    },
+    {
+      "question": "Quels sports font partie du pentathlon moderne ?",
+      "correct_answer": "Escrime, Natation, Équitation, Tir, Course",
+      "options": ["Escrime", "Natation", "Équitation", "Tir", "Course"],
+      "category": "Sport",
+      "type": "multiple-choice",
+      "id": 2,
+      "difficulty": 1
+    },
+    {
+      "question": "Quel est le sport d'équipe le plus ancien au monde ?",
+      "correct_answer": "Hockey sur gazon",
+      "options": ["Rugby", "Hockey sur gazon", "Football", "Cricket"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 3,
+      "difficulty": 1
+    },
+    {
+      "question": "Dans quel sport utilise-t-on une planche pour glisser sur les vagues ?",
+      "correct_answer": "Surf",
+      "options": ["Surf", "Ski nautique", "Planche à voile", "Kitesurf"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 4,
+      "difficulty": 1
+    },
+    {
+      "question": "Quel athlète détient le record du monde du 100 mètres ?",
+      "correct_answer": "Usain Bolt",
+      "options": ["Usain Bolt", "Carl Lewis", "Tyson Gay", "Justin Gatlin"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 5,
+      "difficulty": 1
+    },
+    {
+      "question": "Quels mouvements sont fondamentaux en gymnastique artistique ?",
+      "correct_answer": "Flip, Salto, Rondade",
+      "options": ["Flip", "Salto", "Rondade", "Plié"],
+      "category": "Sport",
+      "type": "multiple-choice",
+      "id": 6,
+      "difficulty": 1
+    },
+    {
+      "question": "Quelle est la durée d'un match de rugby professionnel ?",
+      "correct_answer": "80 minutes",
+      "options": ["70 minutes", "80 minutes", "90 minutes", "100 minutes"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 7,
+      "difficulty": 1
+    },
+    {
+      "question": "Dans quel sport utilise-t-on des anneaux, une poutre et des barres asymétriques ?",
+      "correct_answer": "Gymnastique artistique",
+      "options": ["Gymnastique artistique", "Athlétisme", "Patinage artistique", "Haltérophilie"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 8,
+      "difficulty": 1
+    },
+    {
+      "question": "Quels joueurs ont remporté au moins trois titres NBA MVP ?",
+      "correct_answer": "Michael Jordan, LeBron James, Kareem Abdul-Jabbar",
+      "options": ["Michael Jordan", "LeBron James", "Kareem Abdul-Jabbar", "Magic Johnson"],
+      "category": "Sport",
+      "type": "multiple-choice",
+      "id": 9,
+      "difficulty": 1
+    },
+    {
+      "question": "Quel sport est connu comme le \"sport roi\" au Brésil ?",
+      "correct_answer": "Football",
+      "options": ["Football", "Volley-ball", "Basketball", "Judo"],
+      "category": "Sport",
+      "type": "single-choice",
+      "id": 10,
+      "difficulty": 1
+    }
+  ],
+"Sciences": [
+    {
+      "question": "Quelle est la formule chimique de l'eau ?",
+      "correct_answer": "H2O",
+      "options": ["H2O", "CO2", "O2", "H2O2"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 1,
+      "difficulty": 0
+    },
+    {
+      "question": "Combien de planètes composent le système solaire ?",
+      "correct_answer": "8",
+      "options": ["7", "8", "9", "10"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 2,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel est l'élément chimique dont le symbole est O ?",
+      "correct_answer": "Oxygène",
+      "options": ["Oxygène", "Or", "Osmium", "Ozone"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 3,
+      "difficulty": 0
+    },
+    {
+      "question": "Quelles sont les phases de l'eau ?",
+      "correct_answer": "Solide, Liquide, Gazeuse",
+      "options": ["Solide", "Liquide", "Gazeuse", "Plasma"],
+      "category": "Sciences",
+      "type": "multiple-choice",
+      "id": 4,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel est l'organe principal du système circulatoire humain ?",
+      "correct_answer": "Cœur",
+      "options": ["Cœur", "Poumons", "Foie", "Reins"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 5,
+      "difficulty": 0
+    },
+    {
+      "question": "Quelles disciplines relèvent des sciences physiques ?",
+      "correct_answer": "Physique, Chimie, Astronomie",
+      "options": ["Physique", "Chimie", "Astronomie", "Biologie"],
+      "category": "Sciences",
+      "type": "multiple-choice",
+      "id": 6,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel est le gaz le plus abondant dans l'atmosphère terrestre ?",
+      "correct_answer": "Azote",
+      "options": ["Oxygène", "Azote", "Argon", "Dioxyde de carbone"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 7,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel est le plus grand organe du corps humain ?",
+      "correct_answer": "Peau",
+      "options": ["Foie", "Poumons", "Peau", "Intestins"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 8,
+      "difficulty": 0
+    },
+    {
+      "question": "Dans quels états trouve-t-on l'eau dans la nature ?",
+      "correct_answer": "Liquide, Solide, Gazeux",
+      "options": ["Liquide", "Solide", "Gazeux", "Plasma"],
+      "category": "Sciences",
+      "type": "multiple-choice",
+      "id": 9,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel est le symbole chimique du fer ?",
+      "correct_answer": "Fe",
+      "options": ["Fe", "Ir", "F", "Fr"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 10,
+      "difficulty": 0
+    },
+    {
+      "question": "Quel physicien a développé la théorie de la relativité ?",
+      "correct_answer": "Albert Einstein",
+      "options": ["Isaac Newton", "Albert Einstein", "Galilée", "Niels Bohr"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 11,
+      "difficulty": 1
+    },
+    {
+      "question": "Quelles sont les particules subatomiques principales ?",
+      "correct_answer": "Protons, Neutrons, Électrons",
+      "options": ["Protons", "Neutrons", "Électrons", "Quarks"],
+      "category": "Sciences",
+      "type": "multiple-choice",
+      "id": 12,
+      "difficulty": 1
+    },
+    {
+      "question": "Quel est l'élément le plus léger du tableau périodique ?",
+      "correct_answer": "Hydrogène",
+      "options": ["Hélium", "Hydrogène", "Lithium", "Béryllium"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 13,
+      "difficulty": 1
+    },
+    {
+      "question": "Quelles forces fondamentales agissent sur les particules ?",
+      "correct_answer": "Gravitationnelle, Électromagnétique, Nucléaire faible, Nucléaire forte",
+      "options": ["Gravitationnelle", "Électromagnétique", "Nucléaire faible", "Nucléaire forte"],
+      "category": "Sciences",
+      "type": "multiple-choice",
+      "id": 14,
+      "difficulty": 1
+    },
+    {
+      "question": "Quelle est la valeur approximative de la constante de Planck ?",
+      "correct_answer": "6,626 × 10^-34 Js",
+      "options": ["6,626 × 10^-34 Js", "3,14 × 10^-2 Js", "9,81 m/s²", "1,602 × 10^-19 C"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 15,
+      "difficulty": 1
+    },
+    {
+      "question": "Quels sont les types de liaisons chimiques ?",
+      "correct_answer": "Ionique, Covalente, Métallique",
+      "options": ["Ionique", "Covalente", "Métallique", "Hydrogène"],
+      "category": "Sciences",
+      "type": "multiple-choice",
+      "id": 16,
+      "difficulty": 1
+    },
+    {
+      "question": "Quel scientifique a découvert la radioactivité ?",
+      "correct_answer": "Henri Becquerel",
+      "options": ["Marie Curie", "Henri Becquerel", "Pierre Curie", "Ernest Rutherford"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 17,
+      "difficulty": 1
+    },
+    {
+      "question": "Quels sont les principales molécules de l'ADN ?",
+      "correct_answer": "Adénine, Thymine, Cytosine, Guanine",
+      "options": ["Adénine", "Thymine", "Cytosine", "Guanine"],
+      "category": "Sciences",
+      "type": "multiple-choice",
+      "id": 18,
+      "difficulty": 1
+    },
+    {
+      "question": "Quelle est la distance moyenne entre la Terre et le Soleil ?",
+      "correct_answer": "149,6 millions de kilomètres",
+      "options": ["149,6 millions de kilomètres", "108,2 millions de kilomètres", "227,9 millions de kilomètres", "384 400 kilomètres"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 19,
+      "difficulty": 1
+    },
+    {
+      "question": "Quel est le principe de la conservation de l'énergie ?",
+      "correct_answer": "L'énergie ne peut être ni créée ni détruite, seulement transformée",
+      "options": ["L'énergie peut être détruite", "L'énergie peut être créée", "L'énergie ne peut être ni créée ni détruite, seulement transformée", "L'énergie est infinie"],
+      "category": "Sciences",
+      "type": "single-choice",
+      "id": 20,
+      "difficulty": 1
+    }
+  ]
+};
 
   // Fonction pour stocker le JSON dans Firestore
   Future<void> saveJsonToFirestore() async {
