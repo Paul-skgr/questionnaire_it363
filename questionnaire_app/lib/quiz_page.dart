@@ -28,6 +28,11 @@ class _QuizPageState extends State<QuizPage> {
   double _scoreMax = 0;
   int _correctAnswersCount = 0;
   bool _isDiffChecked = false;
+  String coordinatesList2 = ''; // Liste vide de coordonnées
+  List<double> coordinatesList =[];
+  List<String> correctCoordinates = [];
+  List<String> correctCoordinatesCleaned = [];
+  
 
   Future<void> _loadQuestionsFromFirestore() async {
     try {
@@ -342,6 +347,78 @@ class _QuizPageState extends State<QuizPage> {
             },
           );
 
+        case "map-q":
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //Padding(
+                //padding: const EdgeInsets.all(16.0),
+                //child: Text(
+                  //currentQuestion['question'], // Affiche la question sur la carte
+                  //style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  //textAlign: TextAlign.center,
+                //),
+              //),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Center(
+                  child: SizedBox(
+                    width: 300, 
+                    height: 400, 
+                    child: GestureDetector(
+                      onTapDown: (details) {
+                        final tapX = details.localPosition.dx;
+                        final tapY = details.localPosition.dy;
+                    coordinatesList2=tapX.toString() + ',' +tapY.toString();
+                    //List<String> correctCoordinates = currentQuestion['correct_answer'].split(',');
+                    //List<String> correctCoordinatesCleaned = correctCoordinates.map((coord) => coord.trim()).toList();
+                    //List<String> correctCoordinates = currentQuestion['correct_answer'].split(',');
+                   // List<double> coordinatesList = [tapX, tapY];
+                    // Vérifier si le clic est dans la zone correcte
+                       // final isCorrect = (double.parse(correctCoordinatesCleaned[0]) - coordinatesList[0]).abs() < 4.0 &&
+                          //  (double.parse(correctCoordinatesCleaned[1]) - coordinatesList[1]).abs() < 4.0;
+                      
+                      },
+                      child: Stack(
+                        children: [
+                          Image.asset(
+                            '${currentQuestion["images"]}',
+                            fit: BoxFit.contain, // Adapte l'image à la taille
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                          //Positioned(
+                            //left: 150 - 6,
+                            //top: 153 - 6,
+                            //child: Container(
+                              //width: 30 * 0.5,
+                              //height: 30 * 0.5,
+                              //decoration: BoxDecoration(
+                                //color: Colors.red.withOpacity(0.3),
+                               // border: Border.all(color: Colors.red, width: 2),
+                             // ),
+                           // ),
+                         // ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: _selectedAnswer.isEmpty
+                    ? () {
+                        _checkAnswer(coordinatesList2, currentQuestion['correct_answer'], 'map-q', currentQuestion['difficulty']);
+                      }
+                    : null,
+                child: const Text(
+                  'Valider',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
+          );
+
         default:
           throw Exception("Type de question inconnu");
       }
@@ -417,6 +494,39 @@ class _QuizPageState extends State<QuizPage> {
               _selectedAnswer = 'correct';
               _scoreMax += 1 + logEffect * bonusBase;
             } else {
+              _selectedAnswer = 'incorrect';
+              if (_difficulty > 0) {
+                _difficulty--;
+              }
+              _scoreMax += 1;
+            }
+          });
+          break;
+        case "map-q":
+          setState(() {
+            List<String> selectedCoordinates = selectedOption.split(',');
+
+    
+            List<String> correctCoordinates = correctAnswer.split(',');
+
+    
+            List<String> correctCoordinatesCleaned = 
+                correctCoordinates.map((coord) => coord.trim()).toList();
+
+            // Logarithmic effect basé sur la difficulté
+            double logEffect = _getLogarithmicEffect(1 + questionDifficulty);
+
+            // Comparer les coordonnées sélectionnées avec les bonnes
+           if (correctCoordinatesCleaned.length == selectedCoordinates.length &&
+               (double.parse(correctCoordinatesCleaned[0]) - double.parse(selectedCoordinates[0])).abs()<=9.0 &&
+               (double.parse(correctCoordinatesCleaned[1]) - double.parse(selectedCoordinates[1])).abs()<=9.0 ){
+              _difficulty++;
+              _correctAnswersCount++;
+              _score += 1 + logEffect * bonusBase; // Gain logarithmique pour une bonne réponse
+              _selectedAnswer = 'correct';
+              _scoreMax += 1 + logEffect * bonusBase;
+            } else {
+              // Réponse incorrecte
               _selectedAnswer = 'incorrect';
               if (_difficulty > 0) {
                 _difficulty--;

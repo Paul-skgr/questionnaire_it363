@@ -1,0 +1,51 @@
+import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+Future<void> main() async {
+  // Initialiser Firebase
+  await Firebase.initializeApp();
+
+  // Dossier contenant les images
+  final directory = Directory('assets/images');
+
+  if (!directory.existsSync()) {
+    print('Le dossier "assets/images" n\'existe pas.');
+    return;
+  }
+
+  // Liste des fichiers image dans le dossier
+  final List<FileSystemEntity> files = directory.listSync();
+  final FirebaseStorage storage = FirebaseStorage.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  print('--- URLs des images téléchargées ---');
+  for (FileSystemEntity file in files) {
+    if (file is File && (file.path.endsWith('.png') || file.path.endsWith('.jpg'))) {
+      final fileName = file.uri.pathSegments.last; // Nom du fichier
+      try {
+        // Télécharger sur Firebase Storage
+        final TaskSnapshot snapshot = await storage
+            .ref('quiz_images/$fileName') // Chemin sur Firebase Storage
+            .putFile(file);
+
+        // Récupérer l'URL publique
+        final String downloadUrl = await snapshot.ref.getDownloadURL();
+        print('$fileName: $downloadUrl'); // Afficher l'URL dans la console
+
+        // Ajouter l'URL de l'image dans Firestore (exemple pour une question)
+        await firestore.collection('questions').add({
+          'question': 'Quel est l\'animal qui...', // Question exemple
+          'image_url': downloadUrl, // Ajouter l'URL de l'image
+          'options': ['Chien', 'Chat', 'Lapin', 'Oiseau'], // Options de la question
+          'correct_answer': 'Chat', // Réponse correcte
+        });
+      } catch (e) {
+        print('Échec du téléchargement de $fileName: $e');
+      }
+    }
+  }
+
+  print('Téléchargement des images terminé.');
+}
